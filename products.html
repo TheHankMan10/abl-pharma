@@ -21,7 +21,7 @@
   <a class="skip-link" href="#main-content">Skip to content</a>
   <nav class="nav">
     <div class="container nav-inner">
-      <a href="index.html" class="logo"><img src="Images/abl-logo.png" alt="ABL Pharma Logo" class="site-logo"></a>
+      <a href="index.html" class="logo"><img src="Images/new-abl-logo.png" alt="ABL Pharma Logo" class="site-logo"></a>
       <button id="navToggle" class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="primary-navigation">☰</button>
       <ul id="primary-navigation" class="nav-links" role="navigation">
         <li><a href="index.html">Home</a></li>
@@ -38,132 +38,93 @@
 
   <header class="hero products-hero">
     <div class="container hero-inner">
-      <div class="hero-copy">
-        <span class="eyebrow">Product catalog</span>
-        <h2 class="hero-title">COMPLETE PRODUCT <span class="accent">PORTFOLIO</span></h2>
-        <p class="lead">A premium collection of high-quality support formulas designed for athletes, recovery routines, and long-term wellness goals.</p>
-        <div class="hero-cta">
-          <a href="#productCollection" class="btn btn-primary">Explore Products</a>
-          <a href="index.html" class="btn btn-ghost">Back to Home</a>
-        </div>
-      </div>
-      <div class="hero-art">
-        <img src="Images/CycleSupport.png" alt="ABL Pharma product lineup" id="heroPreview" loading="eager" decoding="async">
+      <div class="products-banner">
+        <img src="Images/new-abl-logo.png" alt="ABL logo" class="products-banner-logo">
+        <h2 class="products-banner-title">PREMIUM PERFORMANCE SUPPLEMENTS</h2>
+        <div class="glowing-divider" role="presentation"></div>
       </div>
     </div>
   </header>
 
   <main id="main-content" class="page-shell">
-    <section id="productCollection" class="container products reveal">
-      <div class="section-header">
-        <span class="eyebrow">Discover the lineup</span>
-        <h3>All Products</h3>
-        <p class="muted">Search the collection, filter by focus, and sort by price or name.</p>
+    <section id="productCollection" class="container products reveal showroom">
+      <div class="section-header showroom-header">
+        <span class="eyebrow">OUR PRODUCTS</span>
+        <h3 class="showroom-title">ENGINEERED FOR RESULTS</h3>
       </div>
 
-      <div class="products-toolbar" role="search">
-        <label class="sr-only" for="productSearch">Search products</label>
-        <input id="productSearch" type="search" placeholder="Search products" aria-label="Search products">
-        <div class="filter-group" role="group" aria-label="Filter products by category">
-          <button type="button" class="filter-chip is-active" data-filter="all">All Products</button>
-          <button type="button" class="filter-chip" data-filter="performance">Performance</button>
-          <button type="button" class="filter-chip" data-filter="recovery">Recovery</button>
-          <button type="button" class="filter-chip" data-filter="daily">Daily Support</button>
-        </div>
-        <label class="sort-control">
-          <span>Sort by</span>
-          <select id="sortSelect" aria-label="Sort products">
-            <option value="featured">Featured</option>
-            <option value="name">Name</option>
-            <option value="price-low">Price: Low to High</option>
-            <option value="price-high">Price: High to Low</option>
-          </select>
-        </label>
-      </div>
+      <div id="productGrid" class="product-grid showroom-grid" data-product-grid>
 
-      <p id="productResults" class="results-summary" aria-live="polite">Showing 5 products</p>
-      <div id="productsLoading" class="products-loading is-active" aria-live="polite">Loading collection…</div>
-
-      <div id="productGrid" class="product-grid" data-product-grid>
-        <article class="product card collection-card product-card" data-name="PCT" data-price="54" data-category="recovery" data-search="pct post cycle therapy recovery support athletes structured transition">
+        <article class="product card showroom-card product-card" data-name="PCT" data-price="54" data-category="recovery" data-search="pct post cycle therapy recovery support athletes structured transition">
           <div class="product-visual">
             <img src="Images/post-cycle-therapy.png" alt="PCT bottle" class="product-image" loading="lazy" decoding="async">
           </div>
           <div class="product-body">
             <h5>PCT</h5>
-            <p class="desc">A recovery-oriented support formula for athletes transitioning out of a demanding routine.</p>
-            <p class="price">$54.00</p>
-            <p class="muted">Best for: structured recovery and post-cycle support.</p>
+            <p class="desc">Recovery-focused support for structured transitions.</p>
             <div class="product-actions">
-              <button type="button" class="btn btn-primary add-to-cart" data-product-id="pct">Add to Cart</button>
               <a href="pct.html" class="btn btn-outline">View Product</a>
+              <button type="button" class="btn btn-primary add-to-cart" data-product-id="pct">Add to Cart</button>
             </div>
           </div>
         </article>
 
-        <article class="product card collection-card product-card" data-name="SHRED RX" data-price="44" data-category="performance" data-search="shred rx performance focus training high output energy mental drive">
+        <article class="product card showroom-card product-card" data-name="SHRED RX" data-price="44" data-category="performance" data-search="shred rx performance focus training high output energy mental drive">
           <div class="product-visual">
             <img src="Images/ShredRX.png" alt="SHRED RX bottle" class="product-image" loading="lazy" decoding="async">
           </div>
           <div class="product-body">
             <h5>SHRED RX</h5>
-            <p class="desc">A performance-focused blend designed to fuel training intensity and sharpen mental drive.</p>
-            <p class="price">$44.00</p>
-            <p class="muted">Best for: hard training sessions and focused performance days.</p>
+            <p class="desc">Performance blend to fuel intensity and focus.</p>
             <div class="product-actions">
-              <button type="button" class="btn btn-primary add-to-cart" data-product-id="shred-rx">Add to Cart</button>
               <a href="shred-rx.html" class="btn btn-outline">View Product</a>
+              <button type="button" class="btn btn-primary add-to-cart" data-product-id="shred-rx">Add to Cart</button>
             </div>
           </div>
         </article>
 
-        <article class="product card collection-card product-card" data-name="TRT" data-price="49" data-category="daily" data-search="trt daily support vitality resilience wellness routine men">
+        <article class="product card showroom-card product-card" data-name="TRT" data-price="49" data-category="daily" data-search="trt daily support vitality resilience wellness routine men">
           <div class="product-visual">
             <img src="Images/TRT.png" alt="TRT bottle" class="product-image" loading="lazy" decoding="async">
           </div>
           <div class="product-body">
             <h5>TRT</h5>
-            <p class="desc">Daily support designed to complement recovery routines and long-term vitality goals.</p>
-            <p class="price">$49.00</p>
-            <p class="muted">Best for: hormonal balance support and everyday consistency.</p>
+            <p class="desc">Daily support for consistent vitality.</p>
             <div class="product-actions">
-              <button type="button" class="btn btn-primary add-to-cart" data-product-id="trt">Add to Cart</button>
               <a href="trt.html" class="btn btn-outline">View Product</a>
+              <button type="button" class="btn btn-primary add-to-cart" data-product-id="trt">Add to Cart</button>
             </div>
           </div>
         </article>
 
-        <article class="product card collection-card product-card" data-name="TUDCA" data-price="0" data-category="recovery" data-search="tudca recovery support resilience liver support wellness routine">
+        <article class="product card showroom-card product-card" data-name="TUDCA" data-price="0" data-category="recovery" data-search="tudca recovery support resilience liver support wellness routine">
           <div class="product-visual">
             <img src="Images/Tudca.png" alt="TUDCA bottle" class="product-image" loading="lazy" decoding="async">
           </div>
           <div class="product-body">
             <h5>TUDCA</h5>
-            <p class="desc">A focused recovery support formula built around resilience and long-term wellness support.</p>
-            <p class="price"><span class="placeholder-label">Price coming soon</span></p>
-            <p class="muted">Best for: recovery-focused protocols and long-term wellness support.</p>
+            <p class="desc">Recovery-focused formula for resilience and support.</p>
             <div class="product-actions">
-              <button type="button" class="btn btn-primary add-to-cart" data-product-id="tudca">Add to Cart</button>
               <a href="tudca.html" class="btn btn-outline">View Product</a>
+              <button type="button" class="btn btn-primary add-to-cart" data-product-id="tudca">Add to Cart</button>
             </div>
           </div>
         </article>
 
-        <article class="product card collection-card product-card" data-name="CYCLE SUPPORT" data-price="0" data-category="daily" data-search="cycle support daily support balance consistency training cycle comprehensive support">
+        <article class="product card showroom-card product-card" data-name="CYCLE SUPPORT" data-price="0" data-category="daily" data-search="cycle support daily support balance consistency training cycle comprehensive support">
           <div class="product-visual">
             <img src="Images/CycleSupport.png" alt="CYCLE SUPPORT bottle" class="product-image" loading="lazy" decoding="async">
           </div>
           <div class="product-body">
             <h5>CYCLE SUPPORT</h5>
-            <p class="desc">A comprehensive support formula for athletes looking for base-level balance throughout demanding routines.</p>
-            <p class="price"><span class="placeholder-label">Price coming soon</span></p>
-            <p class="muted">Best for: daily support and consistency-focused protocols.</p>
+            <p class="desc">Comprehensive daily support for balance and consistency.</p>
             <div class="product-actions">
-              <button type="button" class="btn btn-primary add-to-cart" data-product-id="cycle-support">Add to Cart</button>
               <a href="cycle-support.html" class="btn btn-outline">View Product</a>
+              <button type="button" class="btn btn-primary add-to-cart" data-product-id="cycle-support">Add to Cart</button>
             </div>
           </div>
         </article>
+
       </div>
     </section>
   </main>
@@ -171,7 +132,7 @@
   <footer class="site-footer">
     <div class="container footer-grid">
       <div class="footer-column">
-        <a href="index.html" class="logo"><img src="Images/abl-logo.png" alt="ABL Pharma Logo" class="site-logo"></a>
+        <a href="index.html" class="logo"><img src="Images/new-abl-logo.png" alt="ABL Pharma Logo" class="site-logo"></a>
         <p class="muted">Premium supplement support for athletes, recovery routines, and modern wellness practices.</p>
       </div>
       <div class="footer-column">

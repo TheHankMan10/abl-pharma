@@ -34,10 +34,13 @@ body.page-ready{opacity:1}
 .nav.scrolled{padding:0.2rem 0;background:linear-gradient(180deg, rgba(3,10,26,0.6), rgba(0,0,0,0.6));box-shadow:0 6px 30px rgba(2,8,26,0.6)}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:0.8rem 1rem}
 .logo{font-weight:700;letter-spacing:1px;color:var(--white);text-decoration:none;display:inline-flex;align-items:center;gap:0.6rem}
-/* Logo image sizing: keep proportions, ~50px desktop height and scale down on small screens */
-.logo img.site-logo{height:50px;width:auto;display:block;max-width:220px}
+/* Logo image sizing: use width-based sizing (~200px desktop) so the logo fits naturally in the nav, maintains aspect ratio, and scales responsively */
+.logo img.site-logo{width:200px;height:auto;display:block;max-width:220px}
+@media (max-width:900px){
+  .logo img.site-logo{width:160px}
+}
 @media (max-width:600px){
-  .logo img.site-logo{height:40px}
+  .logo img.site-logo{width:140px}
 }
 .nav-toggle{display:none;background:transparent;border:0;color:var(--white);font-size:1.25rem}
 .nav-links{list-style:none;display:flex;gap:1.1rem;margin:0;padding:0}
@@ -133,7 +136,56 @@ body.page-ready{opacity:1}
 .page-shell{animation:fadeUp .45s ease both}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 /* PRODUCT PAGES */
-.products-hero{padding:3rem 0 2rem}
+/* Hero banner full-width image (homepage and products) */
+.hero-banner{flex:1;min-width:0;display:block}
+.hero-banner .hero-banner-image{width:100%;max-width:none;height:420px;object-fit:cover;border-radius:14px;box-shadow:0 30px 90px rgba(11,132,255,0.06), 0 10px 30px rgba(0,0,0,0.6);display:block;margin:0;filter:drop-shadow(0 20px 60px rgba(11,132,255,0.06));}
+@media (max-width:720px){
+  .hero-banner .hero-banner-image{height:260px}
+}
+@media (max-width:420px){
+  .hero-banner .hero-banner-image{height:200px}
+}
+
+/* Products page: shorter hero banner and premium showroom styles (refined) */
+.products-hero{padding:1.6rem 0 0.8rem;position:relative}
+.products-banner{width:100%;text-align:center;display:flex;flex-direction:column;align-items:center;gap:0.9rem;padding:0.6rem 0;position:relative;overflow:visible}
+/* atmospheric haze behind logo and subtle vignette sides */
+.products-banner::before{content:'';position:absolute;left:50%;top:28%;transform:translateX(-50%);width:68%;height:50%;pointer-events:none;background:radial-gradient(closest-side, rgba(11,132,255,0.10), rgba(11,132,255,0.04) 40%, rgba(0,0,0,0) 75%);filter:blur(36px);opacity:0.9;z-index:0}
+.products-banner::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg, rgba(11,132,255,0.02), rgba(0,0,0,0) 12%, rgba(0,0,0,0) 88%, rgba(11,132,255,0.02));mix-blend-mode:soft-light;z-index:0}
+
+.products-banner-logo{width:290px;max-width:70%;height:auto;display:block;margin:0 auto;position:relative;z-index:2;filter:drop-shadow(0 18px 46px rgba(11,132,255,0.10))}
+@media (max-width:900px){.products-banner-logo{width:230px}}
+@media (max-width:420px){.products-banner-logo{width:170px}}
+
+/* direct glow behind the logo to make it focal */
+.products-banner-logo-glow{position:absolute;left:50%;top:26%;transform:translateX(-50%);width:420px;height:220px;pointer-events:none;z-index:1;border-radius:50%;background:radial-gradient(circle at 50% 40%, rgba(11,132,255,0.18), rgba(11,132,255,0.06) 35%, rgba(0,0,0,0) 65%);filter:blur(36px)}
+
+.products-banner-title{margin:0;margin-top:0.5rem;font-size:clamp(1rem,2.4vw,1.6rem);letter-spacing:0.12em;font-weight:700;color:var(--white);text-transform:uppercase;position:relative;z-index:2}
+.glowing-divider{height:2.5px;width:46%;background:linear-gradient(90deg,rgba(11,144,255,1),rgba(11,99,216,0.96));box-shadow:0 10px 48px rgba(11,132,255,0.16);border-radius:2px;margin:0.8rem auto}
+
+/* Showroom product section (no layout changes) */
+.showroom .section-header{display:flex;flex-direction:column;align-items:center;gap:0.35rem;margin-bottom:1rem}
+.showroom-header .eyebrow{color:var(--accent);font-weight:700;letter-spacing:0.18em;text-transform:uppercase}
+.showroom-title{margin:0;font-size:clamp(1.6rem,3.5vw,2.4rem)}
+
+.showroom-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1.1rem;align-items:stretch;margin-top:1rem}
+@media (max-width:1000px){.showroom-grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:720px){.showroom-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:420px){.showroom-grid{grid-template-columns:1fr}}
+
+.showroom-card{background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.008));border-radius:14px;padding:1rem;border:1px solid rgba(255,255,255,0.03);box-shadow:0 18px 60px rgba(3,10,26,0.55), 0 0 34px rgba(11,132,255,0.04);transition:transform .32s cubic-bezier(.22,1,.36,1),box-shadow .32s ease;display:flex;flex-direction:column;gap:0.6rem;align-items:center;text-align:center;position:relative}
+/* bottle glow and shadow (behind the transparent image) */
+.showroom-card .product-visual{height:200px;display:flex;align-items:center;justify-content:center;position:relative;background:transparent;border-radius:12px}
+.showroom-card .product-visual::before{content:'';position:absolute;left:50%;bottom:26%;transform:translateX(-50%);width:56%;height:34%;border-radius:50%;background:radial-gradient(ellipse at center, rgba(0,0,0,0.62), rgba(0,0,0,0.18) 40%, rgba(0,0,0,0) 70%);filter:blur(10px);z-index:0}
+.showroom-card .product-visual::after{content:'';position:absolute;left:50%;top:28%;transform:translateX(-50%);width:70%;height:64%;background:radial-gradient(circle at 50% 40%, rgba(11,132,255,0.06), rgba(11,132,255,0.02) 35%, rgba(0,0,0,0) 65%);filter:blur(28px);z-index:0}
+.showroom-card .product-image{max-height:182px;width:auto;object-fit:contain;position:relative;z-index:2}
+.showroom-card h5{margin:0;font-size:1.05rem}
+.showroom-card .desc{color:var(--muted);margin:0.5rem 0}
+.showroom-card .product-actions{display:flex;gap:0.6rem;justify-content:center;width:100%}
+.showroom-card:hover{transform:translateY(-8px);box-shadow:0 30px 90px rgba(3,10,26,0.72),0 0 70px rgba(11,132,255,0.10)}
+
+.products-hero .hero-copy{max-width:560px}
+.collection-card .product-body{display:flex;flex-direction:column;gap:0.75rem}
 .products-hero .hero-copy{max-width:560px}
 .collection-card .product-body{display:flex;flex-direction:column;gap:0.75rem}
 .product-link{display:inline-flex;justify-content:center;align-items:center;text-decoration:none;margin-top:0.35rem}
