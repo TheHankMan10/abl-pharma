@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Contact ABL Pharma for product questions, order support, or general business inquiries.">
+  <title>Contact | ABL Pharma</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="Images/abl-logo.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo"><img src="Images/abl-logo.png" alt="ABL Pharma Logo" class="site-logo"></a>
+      <button id="navToggle" class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="primary-navigation">☰</button>
+      <ul id="primary-navigation" class="nav-links" role="navigation">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="about-us.html">About Us</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button id="cartBtn" class="btn btn-outline" type="button" aria-label="Shopping cart"></button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero page-hero">
+    <div class="container hero-inner">
+      <div class="hero-copy">
+        <span class="eyebrow">Contact ABL Pharma</span>
+        <h2 class="hero-title">We’re here to help with <span class="accent">product and order questions</span></h2>
+        <p class="lead">Use the form below or contact our team directly through the provided business details.</p>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="page-shell">
+    <section class="container page-content reveal">
+      <div class="contact-card-grid">
+        <div class="page-card">
+          <div class="section-header">
+            <span class="eyebrow">Contact details</span>
+            <h3>Reach our team</h3>
+          </div>
+          <ul class="simple-list info-list">
+            <li><strong>Email:</strong> <span class="editable-placeholder" contenteditable="true" data-field="contact.email" data-placeholder="true" role="textbox" aria-label="Placeholder: replace contact email before launch">[contact@yourdomain.com] — editable placeholder</span></li>
+            <li><strong>Phone:</strong> <span class="editable-placeholder" contenteditable="true" data-field="contact.phone" data-placeholder="true" role="textbox" aria-label="Placeholder: replace phone before launch">[+1 (###) ###-####] — editable placeholder</span></li>
+            <li><strong>Address:</strong> <span class="editable-placeholder" contenteditable="true" data-field="contact.address" data-placeholder="true" role="textbox" aria-label="Placeholder: replace business address before launch">[Business address — editable placeholder]</span></li>
+            <li><strong>Hours:</strong> <span class="editable-placeholder" contenteditable="true" data-field="contact.hours" data-placeholder="true" role="textbox" aria-label="Placeholder: replace business hours before launch">[Business hours — editable placeholder]</span></li>
+          </ul>
+        </div>
+        <div class="page-card">
+          <div class="section-header">
+            <span class="eyebrow">Message us</span>
+            <h3>Contact form</h3>
+          </div>
+          <form id="contactPageForm" class="contact-form" novalidate>
+            <div class="form-row">
+              <label for="contactName">Name</label>
+              <input id="contactName" name="name" type="text" required aria-required="true">
+            </div>
+            <div class="form-row">
+              <label for="contactEmail">Email</label>
+              <input id="contactEmail" name="email" type="email" required aria-required="true">
+            </div>
+            <div class="form-row">
+              <label for="contactMessage">Message</label>
+              <textarea id="contactMessage" name="message" rows="5" required aria-required="true"></textarea>
+            </div>
+            <div class="form-row form-actions">
+              <button type="submit" class="btn btn-primary">Send Message</button>
+            </div>
+            <p class="muted form-msg" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+
+      <div class="page-card map-card">
+        <div class="section-header">
+          <span class="eyebrow">Visit</span>
+          <h3>Business location</h3>
+        </div>
+        <div class="map-placeholder" role="img" aria-label="Google Maps placeholder for ABL Pharma location">Google Maps placeholder — replace with an embedded map when official business coordinates are available.</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-column">
+        <a href="index.html" class="logo"><img src="Images/abl-logo.png" alt="ABL Pharma Logo" class="site-logo"></a>
+        <p class="muted">Premium supplement support for athletes, recovery routines, and modern wellness practices.</p>
+      </div>
+      <div class="footer-column">
+        <h4>Policies</h4>
+        <ul class="simple-list">
+          <li><a href="privacy-policy.html">Privacy Policy</a></li>
+          <li><a href="terms-conditions.html">Terms &amp; Conditions</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-meta">
+      <span>© 2026 ABL Pharma • All rights reserved</span>
+      <span data-placeholder="true" aria-label="Placeholder content: update legal pages before launch">Placeholder content — update legal pages before launch.</span>
+    </div>
+  </footer>
+
+  <button id="scrollTop" class="scroll-top" type="button" aria-label="Scroll to top">↑</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
