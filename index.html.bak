@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="ABL Pharma develops premium, science-forward supplement support for athletes and wellness-focused consumers. Explore featured products, company values, and quality standards.">
+  <title>ABL Pharma | Premium Supplement Support</title>
+  <!-- Open Graph / Social preview -->
+  <meta property="og:title" content="ABL Pharma | Premium Supplement Support">
+  <meta property="og:description" content="Premium, lab-backed supplements crafted for peak performance, recovery, and long-term wellness routines.">
+  <meta property="og:image" content="preview-web.jpg">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="index.html">
+  <meta name="theme-color" content="#0B84FF">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="Images/abl-logo.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo"><img src="Images/new-abl-logo.png" alt="ABL Pharma Logo" class="site-logo"></a>
+      <button id="navToggle" class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="primary-navigation">☰</button>
+      <ul id="primary-navigation" class="nav-links" role="navigation">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="about-us.html">About Us</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button id="cartBtn" class="btn btn-outline" type="button" aria-label="Shopping cart"></button>
+      </div>
+    </div>
+  </nav>
+
+  <header id="home" class="hero">
+    <div class="container hero-inner">
+      <div class="hero-copy">
+        <span class="eyebrow">Premium wellness support</span>
+        <h2 class="hero-title">SCIENCE BUILT. <span class="accent">PERFORMANCE DRIVEN.</span></h2>
+        <p class="lead">Premium, lab-backed supplements crafted for peak performance, recovery, and long-term wellness routines.</p>
+        <div class="hero-cta">
+          <button id="shopNow" class="btn btn-primary" type="button">Shop Now</button>
+          <a href="products.html" class="btn btn-ghost">View Products</a>
+        </div>
+        <div class="hero-stats" aria-label="ABL Pharma highlights">
+          <div class="stat-pill">Transparent formulations</div>
+          <div class="stat-pill">Premium quality standards</div>
+          <div class="stat-pill">Athlete-first guidance</div>
+        </div>
+      </div>
+      <div class="hero-art hero-banner">
+        <img src="Images/abl-hero.png" alt="ABL hero banner" class="hero-banner-image" loading="eager" decoding="async">
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="page-shell">
+    <section id="products" class="container products reveal">
+      <div class="section-header">
+        <span class="eyebrow">Featured products</span>
+        <h3>Premium formulations for serious routines</h3>
+        <p class="muted">Hand-picked support products built for energy, recovery, and long-term balance.</p>
+      </div>
+
+      <div class="product-grid">
+        <article class="product card product-card">
+          <div class="product-visual">
+            <img src="Images/ShredRX.png" alt="ShredRX bottle" class="product-image" loading="lazy" decoding="async">
+          </div>
+          <div class="product-body">
+            <h5>ShredRX</h5>
+            <p class="desc">Performance-forward support designed to fuel demanding training days and sharpen focus.</p>
+            <p class="price">$44.00</p>
+            <div class="product-actions">
+              <button type="button" class="btn btn-primary add-to-cart" data-product-id="shred-rx">Add to cart</button>
+              <a href="shred-rx.html" class="btn btn-outline">View details</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="product card product-card">
+          <div class="product-visual">
+            <img src="Images/post-cycle-therapy.png" alt="Post Cycle Therapy bottle" class="product-image" loading="lazy" decoding="async">
+          </div>
+          <div class="product-body">
+            <h5>Post Cycle Therapy</h5>
+            <p class="desc">Recovery-focused support crafted for athletes looking for a disciplined post-cycle routine.</p>
+            <p class="price">$54.00</p>
+            <div class="product-actions">
+              <button type="button" class="btn btn-primary add-to-cart" data-product-id="pct">Add to cart</button>
+              <a href="pct.html" class="btn btn-outline">View details</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="product card product-card">
+          <div class="product-visual">
+            <img src="Images/TRT.png" alt="TRT Support bottle" class="product-image" loading="lazy" decoding="async">
+          </div>
+          <div class="product-body">
+            <h5>TRT Support</h5>
+            <p class="desc">Daily support created for vitality-focused wellness routines and long-term consistency.</p>
+            <p class="price">$49.00</p>
+            <div class="product-actions">
+              <button type="button" class="btn btn-primary add-to-cart" data-product-id="trt">Add to cart</button>
+              <a href="trt.html" class="btn btn-outline">View details</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="benefits" class="container benefits reveal">
+      <div class="section-header">
+        <span class="eyebrow">Why choose ABL Pharma</span>
+        <h3>Premium care, thoughtful formulation, and expert standards</h3>
+        <p class="muted">Every formula is developed with clarity, consistency, and a premium experience in mind.</p>
+      </div>
+      <div class="benefit-grid">
+        <div class="benefit card icon-card">
+          <div class="icon-wrap" aria-hidden="true">✦</div>
+          <h4>Science-Backed</h4>
+          <p>Formulations are built around clear product goals, quality control, and disciplined manufacturing practices.</p>
+        </div>
+        <div class="benefit card icon-card">
+          <div class="icon-wrap" aria-hidden="true">◌</div>
+          <h4>Transparent Standards</h4>
+          <p>We prioritize responsibly sourced ingredients, transparent labels, and straightforward product education.</p>
+        </div>
+        <div class="benefit card icon-card">
+          <div class="icon-wrap" aria-hidden="true">⟡</div>
+          <h4>Made for Athletes</h4>
+          <p>Designed to support strength, recovery, and consistency across demanding training routines.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="container story-section reveal">
+      <div class="story-grid">
+        <div class="page-card">
+          <div class="section-header">
+            <span class="eyebrow">Company mission</span>
+            <h3>Elevating modern supplement support</h3>
+          </div>
+          <p>ABL Pharma exists to make premium supplement support feel sophisticated, accessible, and trustworthy. Our team focuses on careful formulation, integrity, and a polished customer experience from first impression through every order.</p>
+          <p class="muted">Placeholder content for future editing. Add your company story, mission, or founding details here.</p>
+        </div>
+        <div class="page-card">
+          <div class="section-header">
+            <span class="eyebrow">Science &amp; quality</span>
+            <h3>Quality-first development</h3>
+          </div>
+          <ul class="simple-list">
+            <li>Premium ingredient selection and thoughtful formulation practices.</li>
+            <li>Quality assurance checkpoints designed to preserve consistency and trust.</li>
+            <li>Clear product education and a polished support experience for every customer.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="container quality-grid reveal">
+      <div class="page-card">
+        <div class="section-header">
+          <span class="eyebrow">Manufacturing</span>
+          <h3>Manufacturing &amp; quality standards</h3>
+        </div>
+        <p>ABL Pharma is committed to premium manufacturing practices, transparent operations, and consistent product execution. Update this section once official manufacturing details, third-party testing information, or facility information becomes available.</p>
+      </div>
+      <div class="page-card">
+        <div class="section-header">
+          <span class="eyebrow">Future-ready</span>
+          <h3>Professional placeholders</h3>
+        </div>
+        <p class="muted">This website is prepared for future updates with dedicated placeholder sections so product facts, certifications, and policy language can be expanded smoothly.</p>
+      </div>
+    </section>
+
+    <section class="container cta-band reveal">
+      <div>
+        <span class="eyebrow">Ready to explore</span>
+        <h3>Browse the full ABL Pharma lineup</h3>
+        <p class="muted">Discover premium support products and find the right fit for your daily routine.</p>
+      </div>
+      <a href="products.html" class="btn btn-primary">Shop Products</a>
+    </section>
+
+    <section id="contact" class="container contact reveal">
+      <div class="section-header">
+        <span class="eyebrow">Contact</span>
+        <h3>Get in touch with our team</h3>
+        <p class="muted">Share your questions about products, orders, or support options.</p>
+      </div>
+
+      <form id="contactForm" class="contact-form" novalidate>
+        <div class="form-row">
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" required aria-required="true">
+        </div>
+        <div class="form-row">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required aria-required="true">
+        </div>
+        <div class="form-row">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5" required aria-required="true"></textarea>
+        </div>
+        <div class="form-row form-actions">
+          <button type="submit" class="btn btn-primary">Send Message</button>
+          <button type="reset" class="btn btn-outline">Reset</button>
+        </div>
+        <p id="contactMsg" class="muted form-msg" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-column">
+        <a href="index.html" class="logo"><img src="Images/new-abl-logo.png" alt="ABL Pharma Logo" class="site-logo"></a>
+        <p class="muted">Premium supplement support for athletes, recovery routines, and modern wellness practices.</p>
+        <div class="footer-social" aria-label="Social links">
+          <a href="https://www.instagram.com" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">◎</a>
+          <a href="https://www.facebook.com" class="social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">◌</a>
+          <a href="https://www.linkedin.com" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">◍</a>
+        </div>
+      </div>
+      <div class="footer-column">
+        <h4>Contact</h4>
+        <ul class="simple-list">
+          <li><strong>Email:</strong> <span class="editable-placeholder" contenteditable="true" data-field="contact.email" data-placeholder="true" role="textbox" aria-label="Placeholder: replace contact email before launch">[contact@yourdomain.com] — editable placeholder</span></li>
+          <li><strong>Phone:</strong> <span class="editable-placeholder" contenteditable="true" data-field="contact.phone" data-placeholder="true" role="textbox" aria-label="Placeholder: replace phone before launch">[+1 (###) ###-####] — editable placeholder</span></li>
+          <li><strong>Address:</strong> <span class="editable-placeholder" contenteditable="true" data-field="contact.address" data-placeholder="true" role="textbox" aria-label="Placeholder: replace business address before launch">[Business address — editable placeholder]</span></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>Quick Links</h4>
+        <ul class="simple-list">
+          <li><a href="products.html">Products</a></li>
+          <li><a href="about-us.html">About Us</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>Policies</h4>
+        <ul class="simple-list">
+          <li><a href="privacy-policy.html">Privacy Policy</a></li>
+          <li><a href="terms-conditions.html">Terms &amp; Conditions</a></li>
+          <li><a href="shipping-returns.html">Shipping &amp; Returns</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-meta">
+      <span>© 2026 ABL Pharma • All rights reserved</span>
+      <span data-placeholder="true" aria-label="Placeholder content: update legal pages before launch">Placeholder content — update legal pages before launch.</span>
+    </div>
+  </footer>
+
+  <button id="scrollTop" class="scroll-top" type="button" aria-label="Scroll to top">↑</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
