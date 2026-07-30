@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Checkout – ABL Pharma. Review your order and submit your details.">
+  <title>Checkout | ABL Pharma</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="Images/newest-abl-logo.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Checkout page layout ─────────────────────────────────── */
+    .checkout-hero {
+      padding: 2.5rem 0 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .checkout-hero .eyebrow { margin-bottom: 0.35rem; }
+    .checkout-hero h1 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); margin: 0; }
+
+    .checkout-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 2.5rem;
+      align-items: start;
+      padding: 2.5rem 0 4rem;
+    }
+
+    /* ── Form ─────────────────────────────────────────────────── */
+    .checkout-form-area { display: flex; flex-direction: column; gap: 1.8rem; }
+
+    .form-section { display: flex; flex-direction: column; gap: 1rem; }
+    .form-section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin: 0 0 0.2rem;
+    }
+    .form-section-title::before {
+      content: '';
+      width: 22px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent));
+      display: block;
+    }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-row.single { grid-template-columns: 1fr; }
+
+    .field { display: flex; flex-direction: column; gap: 0.35rem; }
+    .field label {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--muted);
+    }
+    .field label .optional {
+      font-weight: 400;
+      font-size: 0.76rem;
+      opacity: 0.65;
+      margin-left: 0.25rem;
+    }
+    .field input,
+    .field select,
+    .field textarea {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.92rem;
+      padding: 0.65rem 0.85rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    .field input::placeholder,
+    .field textarea::placeholder { color: rgba(255,255,255,0.22); }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(11,132,255,0.12);
+    }
+    .field select option { background: #0b0c0e; }
+    .field textarea { resize: vertical; min-height: 90px; }
+
+    /* Error state */
+    .field.has-error input,
+    .field.has-error select,
+    .field.has-error textarea {
+      border-color: #e05555;
+      box-shadow: 0 0 0 3px rgba(224,85,85,0.12);
+    }
+    .field .field-error {
+      font-size: 0.76rem;
+      color: #e07070;
+      display: none;
+    }
+    .field.has-error .field-error { display: block; }
+
+    /* ── Order summary ────────────────────────────────────────── */
+    .order-summary {
+      position: sticky;
+      top: 90px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,255,255,0.008));
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .order-summary__header {
+      padding: 1.2rem 1.4rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .order-summary__header .eyebrow { margin-bottom: 0.2rem; }
+    .order-summary__header h2 { font-size: 1rem; margin: 0; }
+
+    .order-summary__items { padding: 0.8rem 1.4rem; display: flex; flex-direction: column; gap: 0.9rem; }
+    .order-empty-note { color: var(--muted); font-size: 0.88rem; text-align: center; padding: 1rem 0; }
+
+    .summary-item { display: flex; gap: 0.85rem; align-items: center; }
+    .summary-item__img {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      flex-shrink: 0;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.03);
+    }
+    .summary-item__info { flex: 1; min-width: 0; }
+    .summary-item__name { font-size: 0.88rem; font-weight: 600; line-height: 1.3; }
+    .summary-item__qty { font-size: 0.78rem; color: var(--muted); margin-top: 0.1rem; }
+    .summary-item__price { font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
+
+    .order-summary__totals {
+      padding: 1rem 1.4rem 1.4rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+    .totals-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.88rem; }
+    .totals-row.total {
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding-top: 0.6rem;
+      margin-top: 0.3rem;
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+    .totals-row .label { color: var(--muted); }
+    .totals-row.total .label { color: var(--text); }
+    .shipping-note { font-size: 0.75rem; color: rgba(255,255,255,0.38); margin-top: 0.1rem; text-align: right; }
+
+    /* ── Action buttons ───────────────────────────────────────── */
+    .checkout-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .checkout-actions .btn { flex: 1; min-width: 140px; justify-content: center; }
+
+    /* ── Confirmation modal ───────────────────────────────────── */
+    .confirm-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.82);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      padding: 1.5rem;
+    }
+    .confirm-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .confirm-modal {
+      background: linear-gradient(160deg, #0b0d12, #070810);
+      border: 1px solid rgba(11,132,255,0.18);
+      border-radius: 18px;
+      padding: 2.5rem 2rem;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 60px rgba(11,132,255,0.08);
+      transform: translateY(20px);
+      transition: transform 0.3s;
+    }
+    .confirm-overlay.is-open .confirm-modal { transform: translateY(0); }
+    .confirm-modal .confirm-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(180deg, var(--accent-2), var(--accent));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.2rem;
+      font-size: 1.5rem;
+    }
+    .confirm-modal h2 { font-size: 1.3rem; margin: 0 0 0.7rem; }
+    .confirm-modal p { color: var(--muted); font-size: 0.92rem; line-height: 1.65; margin: 0 0 0.6rem; }
+    .confirm-modal .btn { margin-top: 1.4rem; width: 100%; }
+
+    /* ── Responsive ───────────────────────────────────────────── */
+    @media (max-width: 860px) {
+      .checkout-layout { grid-template-columns: 1fr; }
+      .order-summary { position: static; }
+    }
+    @media (max-width: 520px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo"><img src="Images/newest-abl-logo.png" alt="ABL Pharma Logo" class="site-logo"></a>
+      <button id="navToggle" class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="primary-navigation">☰</button>
+      <ul id="primary-navigation" class="nav-links" role="navigation">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="about-us.html">About Us</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button id="cartBtn" class="btn btn-outline" type="button" aria-label="Shopping cart"></button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="checkout-hero">
+    <div class="container">
+      <span class="eyebrow">Secure checkout</span>
+      <h1>Checkout</h1>
+    </div>
+  </div>
+
+  <main id="main-content" class="container">
+    <div class="checkout-layout">
+
+      <!-- LEFT: Form -->
+      <div class="checkout-form-area">
+
+        <!-- Contact Information -->
+        <section class="form-section card" style="padding:1.4rem 1.6rem;">
+          <h2 class="form-section-title">Contact Information</h2>
+          <div class="form-row">
+            <div class="field" id="field-firstName">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" name="firstName" autocomplete="given-name" placeholder="Jane">
+              <span class="field-error">First name is required.</span>
+            </div>
+            <div class="field" id="field-lastName">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" name="lastName" autocomplete="family-name" placeholder="Smith">
+              <span class="field-error">Last name is required.</span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field" id="field-email">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" autocomplete="email" placeholder="jane@example.com">
+              <span class="field-error">A valid email address is required.</span>
+            </div>
+            <div class="field" id="field-phone">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="(555) 000-0000">
+              <span class="field-error">Phone number is required.</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Shipping Address -->
+        <section class="form-section card" style="padding:1.4rem 1.6rem;">
+          <h2 class="form-section-title">Shipping Address</h2>
+          <div class="form-row single">
+            <div class="field" id="field-address">
+              <label for="address">Street Address</label>
+              <input type="text" id="address" name="address" autocomplete="street-address" placeholder="123 Main St">
+              <span class="field-error">Street address is required.</span>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="field">
+              <label for="apt">Apartment / Suite <span class="optional">(optional)</span></label>
+              <input type="text" id="apt" name="apt" autocomplete="address-line2" placeholder="Apt 4B">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field" id="field-city">
+              <label for="city">City</label>
+              <input type="text" id="city" name="city" autocomplete="address-level2" placeholder="New York">
+              <span class="field-error">City is required.</span>
+            </div>
+            <div class="field" id="field-state">
+              <label for="state">State</label>
+              <input type="text" id="state" name="state" autocomplete="address-level1" placeholder="NY">
+              <span class="field-error">State is required.</span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field" id="field-zip">
+              <label for="zip">ZIP Code</label>
+              <input type="text" id="zip" name="zip" autocomplete="postal-code" placeholder="10001">
+              <span class="field-error">ZIP code is required.</span>
+            </div>
+            <div class="field" id="field-country">
+              <label for="country">Country</label>
+              <select id="country" name="country" autocomplete="country">
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+                <option value="GB">United Kingdom</option>
+                <option value="AU">Australia</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <!-- Order Notes -->
+        <section class="form-section card" style="padding:1.4rem 1.6rem;">
+          <h2 class="form-section-title">Order Notes <span style="font-size:0.72rem;opacity:0.5;text-transform:none;letter-spacing:0;font-weight:400;">(optional)</span></h2>
+          <div class="field">
+            <label for="notes">Special instructions or questions for the ABL Pharma team</label>
+            <textarea id="notes" name="notes" placeholder="e.g. preferred delivery time, questions about your order…"></textarea>
+          </div>
+        </section>
+
+        <!-- Action buttons -->
+        <div class="checkout-actions">
+          <a href="products.html" class="btn btn-outline" id="backToCartBtn">← Back to Cart</a>
+          <button type="button" class="btn btn-primary" id="placeOrderBtn">Place Order</button>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Order Summary -->
+      <aside class="order-summary" aria-label="Order summary">
+        <div class="order-summary__header">
+          <span class="eyebrow">Your order</span>
+          <h2>Order Summary</h2>
+        </div>
+        <div class="order-summary__items" id="summaryItems">
+          <p class="order-empty-note">Your cart is empty. <a href="products.html" style="color:var(--accent);">Browse products</a></p>
+        </div>
+        <div class="order-summary__totals">
+          <div class="totals-row">
+            <span class="label">Subtotal</span>
+            <span id="summarySubtotal">—</span>
+          </div>
+          <div class="totals-row">
+            <span class="label">Shipping</span>
+            <span style="color:var(--muted);font-size:0.82rem;">Calculated after confirmation</span>
+          </div>
+          <div class="totals-row total">
+            <span class="label">Estimated Total</span>
+            <span id="summaryTotal">—</span>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- Confirmation modal -->
+  <div class="confirm-overlay" id="confirmOverlay" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="confirm-modal">
+      <div class="confirm-icon" aria-hidden="true">✓</div>
+      <h2 id="confirmTitle">Thank you for your order!</h2>
+      <p>Your order request has been received successfully.</p>
+      <p>An ABL Pharma representative will contact you shortly regarding shipping and payment details.</p>
+      <p>We appreciate your business.</p>
+      <button type="button" class="btn btn-primary" id="confirmCloseBtn">Return to Homepage</button>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-column">
+        <a href="index.html" class="logo"><img src="Images/newest-abl-logo.png" alt="ABL Pharma Logo" class="site-logo"></a>
+        <p class="muted">Precision supplements for serious athletes.</p>
+      </div>
+      <div class="footer-column">
+        <h4>Policies</h4>
+        <ul class="simple-list">
+          <li><a href="privacy-policy.html">Privacy Policy</a></li>
+          <li><a href="terms-conditions.html">Terms &amp; Conditions</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-meta">
+      <span>© 2026 ABL Pharma • All rights reserved</span>
+    </div>
+  </footer>
+
+  <button id="scrollTop" class="scroll-top" type="button" aria-label="Scroll to top">↑</button>
+
+  <script src="script.js"></script>
+  <script>
+    // ── Checkout page logic ───────────────────────────────────────
+    (function () {
+      const STORAGE_KEY = 'abl-pharma-cart';
+
+      function loadCart() {
+        try {
+          const saved = localStorage.getItem(STORAGE_KEY);
+          return saved ? JSON.parse(saved) : [];
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function clearCart() {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+
+      function fmt(value) {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+      }
+
+      // ── Render order summary ──────────────────────────────────
+      function renderSummary() {
+        const cart = loadCart();
+        const itemsEl = document.getElementById('summaryItems');
+        const subtotalEl = document.getElementById('summarySubtotal');
+        const totalEl = document.getElementById('summaryTotal');
+
+        if (!cart.length) {
+          itemsEl.innerHTML = '<p class="order-empty-note">Your cart is empty. <a href="products.html" style="color:var(--accent);">Browse products</a></p>';
+          subtotalEl.textContent = '—';
+          totalEl.textContent = '—';
+          document.getElementById('placeOrderBtn').disabled = true;
+          return;
+        }
+
+        const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+        itemsEl.innerHTML = cart.map(item => `
+          <div class="summary-item">
+            <img class="summary-item__img" src="${item.image}" alt="${item.name}">
+            <div class="summary-item__info">
+              <div class="summary-item__name">${item.name}</div>
+              <div class="summary-item__qty">Qty: ${item.quantity}</div>
+            </div>
+            <div class="summary-item__price">${fmt(item.price * item.quantity)}</div>
+          </div>
+        `).join('');
+
+        subtotalEl.textContent = fmt(subtotal);
+        totalEl.textContent = fmt(subtotal);
+        document.getElementById('placeOrderBtn').disabled = false;
+      }
+
+      // ── Validation ────────────────────────────────────────────
+      const REQUIRED_FIELDS = [
+        { id: 'firstName', label: 'First name' },
+        { id: 'lastName',  label: 'Last name' },
+        { id: 'email',     label: 'Email', type: 'email' },
+        { id: 'phone',     label: 'Phone' },
+        { id: 'address',   label: 'Street address' },
+        { id: 'city',      label: 'City' },
+        { id: 'state',     label: 'State' },
+        { id: 'zip',       label: 'ZIP code' },
+      ];
+
+      function validate() {
+        let valid = true;
+
+        REQUIRED_FIELDS.forEach(({ id, type }) => {
+          const el = document.getElementById(id);
+          const wrapper = document.getElementById('field-' + id);
+          if (!el || !wrapper) return;
+
+          const value = el.value.trim();
+          let fieldOk = value.length > 0;
+
+          if (fieldOk && type === 'email') {
+            fieldOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+          }
+
+          wrapper.classList.toggle('has-error', !fieldOk);
+          if (!fieldOk) valid = false;
+        });
+
+        return valid;
+      }
+
+      // Clear error on input
+      REQUIRED_FIELDS.forEach(({ id }) => {
+        const el = document.getElementById(id);
+        const wrapper = document.getElementById('field-' + id);
+        if (el && wrapper) {
+          el.addEventListener('input', () => {
+            if (el.value.trim()) wrapper.classList.remove('has-error');
+          });
+        }
+      });
+
+      // ── Confirmation modal ────────────────────────────────────
+      function showConfirmation() {
+        const overlay = document.getElementById('confirmOverlay');
+        overlay.classList.add('is-open');
+        document.getElementById('confirmCloseBtn').focus();
+      }
+
+      document.getElementById('confirmCloseBtn').addEventListener('click', () => {
+        clearCart();
+        // Update badge if script.js cart is in scope
+        if (typeof updateCartBadge === 'function') updateCartBadge();
+        window.location.href = 'index.html';
+      });
+
+      // ── Place Order ───────────────────────────────────────────
+      document.getElementById('placeOrderBtn').addEventListener('click', () => {
+        const cart = loadCart();
+        if (!cart.length) return;
+
+        if (!validate()) {
+          // Scroll to the first error field
+          const firstError = document.querySelector('.field.has-error input, .field.has-error select, .field.has-error textarea');
+          if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+
+        showConfirmation();
+      });
+
+      // ── Back to Cart ──────────────────────────────────────────
+      // Opens cart drawer on the previous page via hash; just go back
+      document.getElementById('backToCartBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        history.back();
+      });
+
+      // ── Init ──────────────────────────────────────────────────
+      renderSummary();
+    })();
+  </script>
+</body>
+</html>
