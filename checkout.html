@@ -1,0 +1,1214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Checkout – ABL Pharma. Review your order and submit your details.">
+  <title>Checkout | ABL Pharma</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="Images/newest-abl-logo.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Checkout layout ──────────────────────────────────────── */
+    .checkout-hero { padding: 2.5rem 0 1rem; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .checkout-hero .eyebrow { margin-bottom: 0.35rem; }
+    .checkout-hero h1 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); margin: 0; }
+
+    .checkout-layout {
+      display: grid;
+      grid-template-columns: 1fr 390px;
+      gap: 2.5rem;
+      align-items: start;
+      padding: 2.5rem 0 4rem;
+    }
+
+    /* ── Form sections ────────────────────────────────────────── */
+    .checkout-form-area { display: flex; flex-direction: column; gap: 1.8rem; }
+    .form-section { display: flex; flex-direction: column; gap: 1rem; }
+    .form-section-title {
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--accent);
+      display: flex; align-items: center; gap: 0.6rem; margin: 0 0 0.2rem;
+    }
+    .form-section-title::before {
+      content: ''; width: 22px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent)); display: block;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-row.single { grid-template-columns: 1fr; }
+
+    /* ── Fields ───────────────────────────────────────────────── */
+    .field { display: flex; flex-direction: column; gap: 0.35rem; position: relative; }
+    .field label { font-size: 0.82rem; font-weight: 500; color: var(--muted); }
+    .field label .optional { font-weight: 400; font-size: 0.76rem; opacity: 0.65; margin-left: 0.25rem; }
+    .field input,
+    .field textarea {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; color: var(--text);
+      font-family: inherit; font-size: 0.92rem;
+      padding: 0.65rem 0.85rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none; -webkit-appearance: none; width: 100%; box-sizing: border-box;
+    }
+    .field input::placeholder, .field textarea::placeholder { color: rgba(255,255,255,0.22); }
+    .field input:focus, .field textarea:focus {
+      border-color: var(--accent); box-shadow: 0 0 0 3px rgba(11,132,255,0.12);
+    }
+    .field textarea { resize: vertical; min-height: 90px; }
+
+    /* Error state */
+    .field.has-error input,
+    .field.has-error textarea,
+    .field.has-error .combobox-input { border-color: #e05555 !important; box-shadow: 0 0 0 3px rgba(224,85,85,0.12) !important; }
+    .field .field-error { font-size: 0.76rem; color: #e07070; display: none; margin-top: 0.1rem; }
+    .field.has-error .field-error { display: block; }
+
+    /* ── Combobox (searchable select) ─────────────────────────── */
+    .combobox-wrapper {
+      position: relative; display: block;
+    }
+    .combobox-input {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; color: var(--text);
+      font-family: inherit; font-size: 0.92rem;
+      padding: 0.65rem 2.2rem 0.65rem 0.85rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none; -webkit-appearance: none;
+      width: 100%; box-sizing: border-box; cursor: text;
+    }
+    .combobox-input::placeholder { color: rgba(255,255,255,0.22); }
+    .combobox-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(11,132,255,0.12); }
+    .combobox-arrow {
+      position: absolute; right: 0.7rem; top: 50%; transform: translateY(-50%);
+      pointer-events: none; color: rgba(255,255,255,0.4); font-size: 0.7rem;
+      transition: transform 0.2s;
+    }
+    .combobox-wrapper[aria-expanded="true"] .combobox-arrow { transform: translateY(-50%) rotate(180deg); }
+    .combobox-list {
+      position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+      background: #000;
+      border: 1px solid rgba(11,132,255,0.45);
+      border-radius: 10px;
+      z-index: 9999;
+      max-height: 220px; overflow-y: auto;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.95), 0 0 0 1px rgba(11,132,255,0.15);
+      padding: 0.3rem 0; margin: 0; list-style: none;
+    }
+    .combobox-list::-webkit-scrollbar { width: 5px; }
+    .combobox-list::-webkit-scrollbar-track { background: #000; border-radius: 0 10px 10px 0; }
+    .combobox-list::-webkit-scrollbar-thumb { background: rgba(11,132,255,0.5); border-radius: 3px; }
+    .combobox-option {
+      padding: 0.55rem 1rem; font-size: 0.88rem; cursor: pointer;
+      color: rgba(255,255,255,0.75);
+      transition: background 0.1s, color 0.1s;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .combobox-option:last-child { border-bottom: none; }
+    .combobox-option:hover,
+    .combobox-option.is-active {
+      background: rgba(11,132,255,0.22);
+      color: #fff;
+    }
+    .combobox-option[aria-selected="true"] {
+      color: var(--accent);
+      background: rgba(11,132,255,0.10);
+    }
+    .combobox-option[aria-selected="true"]:hover,
+    .combobox-option[aria-selected="true"].is-active {
+      background: rgba(11,132,255,0.28);
+      color: #fff;
+    }
+    .combobox-no-results { padding: 0.55rem 1rem; font-size: 0.84rem; color: rgba(255,255,255,0.3); }
+
+    /* ── Address autocomplete suggestion list ─────────────────── */
+    /* Styled to match combobox; Google Places will inject its own UI */
+    .pac-container {
+      background: #0e1016 !important;
+      border: 1px solid rgba(11,132,255,0.2) !important;
+      border-radius: 10px !important;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.8) !important;
+      font-family: 'Poppins', system-ui, sans-serif !important;
+      margin-top: 2px !important;
+    }
+    .pac-item { color: var(--muted) !important; border-top: 1px solid rgba(255,255,255,0.04) !important; padding: 0.4rem 0.9rem !important; }
+    .pac-item:hover, .pac-item-selected { background: rgba(11,132,255,0.12) !important; }
+    .pac-item-query { color: var(--text) !important; font-size: 0.88rem !important; }
+    .pac-matched { color: var(--accent) !important; }
+    .pac-icon { display: none !important; }
+    .pac-logo::after { display: none !important; }
+
+    /* ── Order summary ────────────────────────────────────────── */
+    .order-summary {
+      position: sticky; top: 90px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,255,255,0.008));
+      border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; overflow: hidden;
+    }
+    .order-summary__header { padding: 1.2rem 1.4rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .order-summary__header .eyebrow { margin-bottom: 0.2rem; }
+    .order-summary__header h2 { font-size: 1rem; margin: 0; }
+
+    .order-summary__items { padding: 0.8rem 1.4rem; display: flex; flex-direction: column; gap: 1rem; }
+    .order-empty-note { color: var(--muted); font-size: 0.88rem; text-align: center; padding: 1rem 0; }
+
+    .summary-item { display: flex; gap: 0.9rem; align-items: center; }
+    .summary-item__img {
+      width: 60px; height: 60px; object-fit: contain;
+      flex-shrink: 0; border-radius: 6px; background: rgba(255,255,255,0.03);
+    }
+    .summary-item__info { flex: 1; min-width: 0; }
+    .summary-item__name { font-size: 0.88rem; font-weight: 600; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .summary-item__qty { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+    .summary-item__price { font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
+
+    .order-summary__totals {
+      padding: 1rem 1.4rem 1.4rem; border-top: 1px solid rgba(255,255,255,0.05);
+      display: flex; flex-direction: column; gap: 0.55rem;
+    }
+    .totals-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.88rem; }
+    .totals-row.total {
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding-top: 0.6rem; margin-top: 0.3rem; font-weight: 700; font-size: 0.96rem;
+    }
+    .totals-row .label { color: var(--muted); }
+    .totals-row.total .label { color: var(--text); }
+    .shipping-note { font-size: 0.74rem; color: rgba(255,255,255,0.35); margin-top: 0.15rem; text-align: right; }
+
+    /* ── Action buttons ───────────────────────────────────────── */
+    .checkout-actions { display: flex; gap: 1rem; margin-top: 0.5rem; flex-wrap: wrap; }
+    .checkout-actions .btn { flex: 1; min-width: 140px; justify-content: center; }
+
+    /* ── Confirmation modal ───────────────────────────────────── */
+    .confirm-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+      z-index: 200; display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s; padding: 1.5rem;
+    }
+    .confirm-overlay.is-open { opacity: 1; pointer-events: auto; }
+    .confirm-modal {
+      background: linear-gradient(160deg, #0b0d12, #070810);
+      border: 1px solid rgba(11,132,255,0.22); border-radius: 18px;
+      padding: 2.5rem 2rem; max-width: 480px; width: 100%; text-align: center;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.85), 0 0 60px rgba(11,132,255,0.09);
+      transform: translateY(20px); transition: transform 0.3s;
+    }
+    .confirm-overlay.is-open .confirm-modal { transform: translateY(0); }
+    .confirm-icon {
+      width: 58px; height: 58px;
+      background: linear-gradient(180deg, var(--accent-2), var(--accent));
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.2rem; font-size: 1.5rem;
+      box-shadow: 0 0 30px rgba(11,132,255,0.3);
+    }
+    .confirm-modal h2 { font-size: 1.3rem; margin: 0 0 0.7rem; }
+    .confirm-modal p { color: var(--muted); font-size: 0.92rem; line-height: 1.65; margin: 0 0 0.55rem; }
+    .confirm-ref {
+      background: rgba(11,132,255,0.08); border: 1px solid rgba(11,132,255,0.18);
+      border-radius: 8px; padding: 0.65rem 1rem; margin: 0.9rem 0 0.4rem;
+      font-size: 0.88rem; color: var(--muted);
+    }
+    .confirm-ref strong { color: var(--accent); font-size: 1rem; letter-spacing: 0.04em; display: block; margin-top: 0.2rem; }
+    .confirm-modal .btn { margin-top: 1.4rem; width: 100%; }
+
+    /* ── Responsive ───────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .checkout-layout { grid-template-columns: 1fr; }
+      .order-summary { position: static; order: -1; }
+    }
+    @media (max-width: 520px) {
+      .form-row { grid-template-columns: 1fr; }
+      .checkout-actions { flex-direction: column; }
+      .checkout-actions .btn { flex: none; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo"><img src="Images/newest-abl-logo.png" alt="ABL Pharma Logo" class="site-logo"></a>
+      <button id="navToggle" class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="primary-navigation">☰</button>
+      <ul id="primary-navigation" class="nav-links" role="navigation">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="about-us.html">About Us</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button id="cartBtn" class="btn btn-outline" type="button" aria-label="Shopping cart"></button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="checkout-hero">
+    <div class="container">
+      <span class="eyebrow">Secure checkout</span>
+      <h1>Checkout</h1>
+    </div>
+  </div>
+
+  <main id="main-content" class="container">
+    <div class="checkout-layout">
+
+      <!-- LEFT: Form -->
+      <div class="checkout-form-area">
+
+        <!-- Contact Information -->
+        <section class="form-section card" style="padding:1.4rem 1.6rem;">
+          <h2 class="form-section-title">Contact Information</h2>
+          <div class="form-row">
+            <div class="field" id="field-firstName">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" name="firstName" autocomplete="given-name" placeholder="Jane">
+              <span class="field-error">First name is required.</span>
+            </div>
+            <div class="field" id="field-lastName">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" name="lastName" autocomplete="family-name" placeholder="Smith">
+              <span class="field-error">Last name is required.</span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field" id="field-email">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" autocomplete="email" placeholder="jane@example.com">
+              <span class="field-error">Please enter a valid email address.</span>
+            </div>
+            <div class="field" id="field-phone">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="(555) 000-0000">
+              <span class="field-error">Please enter a valid phone number.</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Shipping Address -->
+        <section class="form-section card" style="padding:1.4rem 1.6rem;">
+          <h2 class="form-section-title">Shipping Address</h2>
+
+          <div class="form-row single">
+            <div class="field" id="field-address">
+              <label for="address">Street Address</label>
+              <!-- address-autocomplete: Google Places attaches here when API key is configured -->
+              <input type="text" id="address" name="address" autocomplete="street-address" placeholder="123 Main St">
+              <span class="field-error">Street address is required.</span>
+            </div>
+          </div>
+
+          <div class="form-row single">
+            <div class="field">
+              <label for="apt">Apartment / Suite <span class="optional">(optional)</span></label>
+              <input type="text" id="apt" name="apt" autocomplete="address-line2" placeholder="Apt 4B">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field" id="field-city">
+              <label for="city">City</label>
+              <input type="text" id="city" name="city" autocomplete="address-level2" placeholder="New York">
+              <span class="field-error">City is required.</span>
+            </div>
+            <!-- State combobox — populated dynamically based on country -->
+            <div class="field" id="field-state">
+              <label id="stateLabel" for="stateSearch">State</label>
+              <div class="combobox-wrapper" id="stateCombobox"
+                   role="combobox" aria-haspopup="listbox"
+                   aria-expanded="false" aria-owns="stateList"
+                   aria-labelledby="stateLabel">
+                <input type="text" id="stateSearch" class="combobox-input"
+                       autocomplete="off" placeholder="Select state…"
+                       aria-autocomplete="list" aria-controls="stateList"
+                       data-selected-value="">
+                <span class="combobox-arrow" aria-hidden="true">▾</span>
+                <ul id="stateList" role="listbox" class="combobox-list" aria-label="States" hidden></ul>
+              </div>
+              <span class="field-error" id="stateError">State is required.</span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field" id="field-zip">
+              <label for="zip" id="zipLabel">ZIP Code</label>
+              <input type="text" id="zip" name="zip" autocomplete="postal-code" placeholder="10001">
+              <span class="field-error" id="zipError">Please enter a valid ZIP code.</span>
+            </div>
+            <!-- Country combobox -->
+            <div class="field" id="field-country">
+              <label id="countryLabel" for="countrySearch">Country</label>
+              <div class="combobox-wrapper" id="countryCombobox"
+                   role="combobox" aria-haspopup="listbox"
+                   aria-expanded="false" aria-owns="countryList"
+                   aria-labelledby="countryLabel">
+                <input type="text" id="countrySearch" class="combobox-input"
+                       autocomplete="off" placeholder="Select country…"
+                       aria-autocomplete="list" aria-controls="countryList"
+                       data-selected-value="US">
+                <span class="combobox-arrow" aria-hidden="true">▾</span>
+                <ul id="countryList" role="listbox" class="combobox-list" aria-label="Countries" hidden></ul>
+              </div>
+              <span class="field-error">Please select a valid country.</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Order Notes -->
+        <section class="form-section card" style="padding:1.4rem 1.6rem;">
+          <h2 class="form-section-title">Order Notes <span style="font-size:0.72rem;opacity:0.5;text-transform:none;letter-spacing:0;font-weight:400;">(optional)</span></h2>
+          <div class="field">
+            <label for="notes">Special instructions or questions for the ABL Pharma team</label>
+            <textarea id="notes" name="notes" placeholder="e.g. preferred delivery time, questions about your order…"></textarea>
+          </div>
+        </section>
+
+        <!-- Actions -->
+        <div class="checkout-actions">
+          <button type="button" class="btn btn-outline" id="backToCartBtn">← Back to Cart</button>
+          <button type="button" class="btn btn-primary" id="placeOrderBtn">Place Order</button>
+        </div>
+
+      </div><!-- /checkout-form-area -->
+
+      <!-- RIGHT: Order Summary -->
+      <aside class="order-summary" aria-label="Order summary">
+        <div class="order-summary__header">
+          <span class="eyebrow">Your order</span>
+          <h2>Order Summary</h2>
+        </div>
+        <div class="order-summary__items" id="summaryItems">
+          <p class="order-empty-note">Your cart is empty. <a href="products.html" style="color:var(--accent);">Browse products</a></p>
+        </div>
+        <div class="order-summary__totals">
+          <div class="totals-row">
+            <span class="label">Subtotal</span>
+            <span id="summarySubtotal">—</span>
+          </div>
+          <div class="totals-row" style="flex-direction:column;align-items:flex-start;gap:0.2rem;">
+            <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
+              <span class="label">Shipping</span>
+              <span style="color:var(--muted);font-size:0.82rem;">TBD</span>
+            </div>
+            <span class="shipping-note" style="text-align:left;">Calculated after order confirmation</span>
+          </div>
+          <div class="totals-row total">
+            <span class="label">Total Before Shipping</span>
+            <span id="summaryTotal">—</span>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- Confirmation modal -->
+  <div class="confirm-overlay" id="confirmOverlay" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="confirm-modal">
+      <div class="confirm-icon" aria-hidden="true">✓</div>
+      <h2 id="confirmTitle">Thank you for your order!</h2>
+      <p>Your order request has been received successfully.</p>
+      <div class="confirm-ref" id="confirmRef" aria-live="polite">
+        Order Reference
+        <strong id="confirmRefNumber">—</strong>
+      </div>
+      <p>An ABL Pharma representative will contact you shortly regarding shipping and payment details.</p>
+      <p>We appreciate your business.</p>
+      <button type="button" class="btn btn-primary" id="confirmCloseBtn">Return to Homepage</button>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-column">
+        <a href="index.html" class="logo"><img src="Images/newest-abl-logo.png" alt="ABL Pharma Logo" class="site-logo"></a>
+        <p class="muted">Precision supplements for serious athletes.</p>
+      </div>
+      <div class="footer-column">
+        <h4>Policies</h4>
+        <ul class="simple-list">
+          <li><a href="privacy-policy.html">Privacy Policy</a></li>
+          <li><a href="terms-conditions.html">Terms &amp; Conditions</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-meta">
+      <span>© 2026 ABL Pharma • All rights reserved</span>
+    </div>
+  </footer>
+
+  <button id="scrollTop" class="scroll-top" type="button" aria-label="Scroll to top">↑</button>
+
+  <script src="script.js"></script>
+  <script>
+  // =============================================================================
+  // ABL PHARMA — CHECKOUT PAGE SCRIPT
+  // =============================================================================
+
+  (function () {
+    'use strict';
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // ADDRESS AUTOCOMPLETE CONFIGURATION
+    // ─────────────────────────────────────────────────────────────────────────
+    // To enable Google Places address autocomplete:
+    //   1. Create a project at https://console.cloud.google.com/
+    //   2. Enable "Places API" and "Maps JavaScript API"
+    //   3. Create an API key and restrict it to your domain
+    //      (Application restrictions → HTTP referrers → yourdomain.com/*)
+    //   4. Restrict API permissions to "Maps JavaScript API" + "Places API"
+    //   5. Replace the empty string below with your key
+    //
+    // IMPORTANT: Never commit a production API key to a public repository.
+    // Use an environment variable or server-side config injection for production.
+    //
+    // If GOOGLE_PLACES_API_KEY is empty (''), autocomplete is silently disabled
+    // and all fields remain fully functional as standard text inputs.
+    // ─────────────────────────────────────────────────────────────────────────
+    const GOOGLE_PLACES_API_KEY = ''; // ← Add your Google Places API key here
+
+    const STORAGE_KEY = 'abl-pharma-cart';
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // DATA: Countries
+    // ─────────────────────────────────────────────────────────────────────────
+    const COUNTRIES = [
+      { code: 'US', name: 'United States' },
+      { code: 'CA', name: 'Canada' },
+      { code: 'GB', name: 'United Kingdom' },
+      { code: 'AU', name: 'Australia' },
+      { code: 'AF', name: 'Afghanistan' },
+      { code: 'AL', name: 'Albania' },
+      { code: 'DZ', name: 'Algeria' },
+      { code: 'AR', name: 'Argentina' },
+      { code: 'AM', name: 'Armenia' },
+      { code: 'AT', name: 'Austria' },
+      { code: 'AZ', name: 'Azerbaijan' },
+      { code: 'BH', name: 'Bahrain' },
+      { code: 'BD', name: 'Bangladesh' },
+      { code: 'BE', name: 'Belgium' },
+      { code: 'BA', name: 'Bosnia and Herzegovina' },
+      { code: 'BR', name: 'Brazil' },
+      { code: 'BG', name: 'Bulgaria' },
+      { code: 'KH', name: 'Cambodia' },
+      { code: 'CM', name: 'Cameroon' },
+      { code: 'CL', name: 'Chile' },
+      { code: 'CN', name: 'China' },
+      { code: 'CO', name: 'Colombia' },
+      { code: 'CR', name: 'Costa Rica' },
+      { code: 'HR', name: 'Croatia' },
+      { code: 'CY', name: 'Cyprus' },
+      { code: 'CZ', name: 'Czech Republic' },
+      { code: 'DK', name: 'Denmark' },
+      { code: 'DO', name: 'Dominican Republic' },
+      { code: 'EC', name: 'Ecuador' },
+      { code: 'EG', name: 'Egypt' },
+      { code: 'SV', name: 'El Salvador' },
+      { code: 'EE', name: 'Estonia' },
+      { code: 'ET', name: 'Ethiopia' },
+      { code: 'FI', name: 'Finland' },
+      { code: 'FR', name: 'France' },
+      { code: 'GE', name: 'Georgia' },
+      { code: 'DE', name: 'Germany' },
+      { code: 'GH', name: 'Ghana' },
+      { code: 'GR', name: 'Greece' },
+      { code: 'GT', name: 'Guatemala' },
+      { code: 'HN', name: 'Honduras' },
+      { code: 'HK', name: 'Hong Kong' },
+      { code: 'HU', name: 'Hungary' },
+      { code: 'IS', name: 'Iceland' },
+      { code: 'IN', name: 'India' },
+      { code: 'ID', name: 'Indonesia' },
+      { code: 'IQ', name: 'Iraq' },
+      { code: 'IE', name: 'Ireland' },
+      { code: 'IL', name: 'Israel' },
+      { code: 'IT', name: 'Italy' },
+      { code: 'JM', name: 'Jamaica' },
+      { code: 'JP', name: 'Japan' },
+      { code: 'JO', name: 'Jordan' },
+      { code: 'KZ', name: 'Kazakhstan' },
+      { code: 'KE', name: 'Kenya' },
+      { code: 'KW', name: 'Kuwait' },
+      { code: 'LV', name: 'Latvia' },
+      { code: 'LB', name: 'Lebanon' },
+      { code: 'LT', name: 'Lithuania' },
+      { code: 'LU', name: 'Luxembourg' },
+      { code: 'MY', name: 'Malaysia' },
+      { code: 'MX', name: 'Mexico' },
+      { code: 'MD', name: 'Moldova' },
+      { code: 'MA', name: 'Morocco' },
+      { code: 'NL', name: 'Netherlands' },
+      { code: 'NZ', name: 'New Zealand' },
+      { code: 'NG', name: 'Nigeria' },
+      { code: 'NO', name: 'Norway' },
+      { code: 'OM', name: 'Oman' },
+      { code: 'PK', name: 'Pakistan' },
+      { code: 'PA', name: 'Panama' },
+      { code: 'PY', name: 'Paraguay' },
+      { code: 'PE', name: 'Peru' },
+      { code: 'PH', name: 'Philippines' },
+      { code: 'PL', name: 'Poland' },
+      { code: 'PT', name: 'Portugal' },
+      { code: 'QA', name: 'Qatar' },
+      { code: 'RO', name: 'Romania' },
+      { code: 'RU', name: 'Russia' },
+      { code: 'SA', name: 'Saudi Arabia' },
+      { code: 'SN', name: 'Senegal' },
+      { code: 'RS', name: 'Serbia' },
+      { code: 'SG', name: 'Singapore' },
+      { code: 'SK', name: 'Slovakia' },
+      { code: 'SI', name: 'Slovenia' },
+      { code: 'ZA', name: 'South Africa' },
+      { code: 'KR', name: 'South Korea' },
+      { code: 'ES', name: 'Spain' },
+      { code: 'LK', name: 'Sri Lanka' },
+      { code: 'SE', name: 'Sweden' },
+      { code: 'CH', name: 'Switzerland' },
+      { code: 'TW', name: 'Taiwan' },
+      { code: 'TZ', name: 'Tanzania' },
+      { code: 'TH', name: 'Thailand' },
+      { code: 'TN', name: 'Tunisia' },
+      { code: 'TR', name: 'Turkey' },
+      { code: 'UG', name: 'Uganda' },
+      { code: 'UA', name: 'Ukraine' },
+      { code: 'AE', name: 'United Arab Emirates' },
+      { code: 'UY', name: 'Uruguay' },
+      { code: 'UZ', name: 'Uzbekistan' },
+      { code: 'VE', name: 'Venezuela' },
+      { code: 'VN', name: 'Vietnam' },
+      { code: 'YE', name: 'Yemen' },
+      { code: 'ZM', name: 'Zambia' },
+      { code: 'ZW', name: 'Zimbabwe' },
+    ];
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // DATA: US States (all 50 + DC)
+    // ─────────────────────────────────────────────────────────────────────────
+    const US_STATES = [
+      { code: 'AL', name: 'Alabama' }, { code: 'AK', name: 'Alaska' },
+      { code: 'AZ', name: 'Arizona' }, { code: 'AR', name: 'Arkansas' },
+      { code: 'CA', name: 'California' }, { code: 'CO', name: 'Colorado' },
+      { code: 'CT', name: 'Connecticut' }, { code: 'DE', name: 'Delaware' },
+      { code: 'DC', name: 'District of Columbia' }, { code: 'FL', name: 'Florida' },
+      { code: 'GA', name: 'Georgia' }, { code: 'HI', name: 'Hawaii' },
+      { code: 'ID', name: 'Idaho' }, { code: 'IL', name: 'Illinois' },
+      { code: 'IN', name: 'Indiana' }, { code: 'IA', name: 'Iowa' },
+      { code: 'KS', name: 'Kansas' }, { code: 'KY', name: 'Kentucky' },
+      { code: 'LA', name: 'Louisiana' }, { code: 'ME', name: 'Maine' },
+      { code: 'MD', name: 'Maryland' }, { code: 'MA', name: 'Massachusetts' },
+      { code: 'MI', name: 'Michigan' }, { code: 'MN', name: 'Minnesota' },
+      { code: 'MS', name: 'Mississippi' }, { code: 'MO', name: 'Missouri' },
+      { code: 'MT', name: 'Montana' }, { code: 'NE', name: 'Nebraska' },
+      { code: 'NV', name: 'Nevada' }, { code: 'NH', name: 'New Hampshire' },
+      { code: 'NJ', name: 'New Jersey' }, { code: 'NM', name: 'New Mexico' },
+      { code: 'NY', name: 'New York' }, { code: 'NC', name: 'North Carolina' },
+      { code: 'ND', name: 'North Dakota' }, { code: 'OH', name: 'Ohio' },
+      { code: 'OK', name: 'Oklahoma' }, { code: 'OR', name: 'Oregon' },
+      { code: 'PA', name: 'Pennsylvania' }, { code: 'RI', name: 'Rhode Island' },
+      { code: 'SC', name: 'South Carolina' }, { code: 'SD', name: 'South Dakota' },
+      { code: 'TN', name: 'Tennessee' }, { code: 'TX', name: 'Texas' },
+      { code: 'UT', name: 'Utah' }, { code: 'VT', name: 'Vermont' },
+      { code: 'VA', name: 'Virginia' }, { code: 'WA', name: 'Washington' },
+      { code: 'WV', name: 'West Virginia' }, { code: 'WI', name: 'Wisconsin' },
+      { code: 'WY', name: 'Wyoming' },
+    ];
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // DATA: Canadian Provinces & Territories
+    // ─────────────────────────────────────────────────────────────────────────
+    const CA_PROVINCES = [
+      { code: 'AB', name: 'Alberta' }, { code: 'BC', name: 'British Columbia' },
+      { code: 'MB', name: 'Manitoba' }, { code: 'NB', name: 'New Brunswick' },
+      { code: 'NL', name: 'Newfoundland and Labrador' }, { code: 'NS', name: 'Nova Scotia' },
+      { code: 'NT', name: 'Northwest Territories' }, { code: 'NU', name: 'Nunavut' },
+      { code: 'ON', name: 'Ontario' }, { code: 'PE', name: 'Prince Edward Island' },
+      { code: 'QC', name: 'Quebec' }, { code: 'SK', name: 'Saskatchewan' },
+      { code: 'YT', name: 'Yukon' },
+    ];
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // DATA: Australian States & Territories
+    // ─────────────────────────────────────────────────────────────────────────
+    const AU_STATES = [
+      { code: 'ACT', name: 'Australian Capital Territory' },
+      { code: 'NSW', name: 'New South Wales' },
+      { code: 'NT',  name: 'Northern Territory' },
+      { code: 'QLD', name: 'Queensland' },
+      { code: 'SA',  name: 'South Australia' },
+      { code: 'TAS', name: 'Tasmania' },
+      { code: 'VIC', name: 'Victoria' },
+      { code: 'WA',  name: 'Western Australia' },
+    ];
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // COMBOBOX FACTORY
+    // Creates an accessible, keyboard-navigable searchable dropdown.
+    // Returns a controller object with getValue(), setValue(), clear() methods.
+    // ─────────────────────────────────────────────────────────────────────────
+    function createCombobox(wrapperId, fieldId, options, onSelect) {
+      const wrapper = document.getElementById(wrapperId);
+      const input   = wrapper ? wrapper.querySelector('.combobox-input') : null;
+      const list    = wrapper ? wrapper.querySelector('.combobox-list')  : null;
+      if (!wrapper || !input || !list) return null;
+
+      let allOptions   = options.slice();
+      let activeIndex  = -1;
+      let isOpen       = false;
+      let searchQuery  = ''; // separate from display value — set only when user types
+
+      function getFiltered() {
+        const q = searchQuery.trim().toLowerCase();
+        return q
+          ? allOptions.filter(o => o.name.toLowerCase().includes(q))
+          : allOptions;
+      }
+
+      function renderList(filtered) {
+        if (!filtered.length) {
+          list.innerHTML = '<li class="combobox-no-results" role="option" aria-disabled="true">No results</li>';
+          return;
+        }
+        const selectedVal = input.dataset.selectedValue;
+        list.innerHTML = filtered.map((o, i) => {
+          const sel = o.code === selectedVal ? ' aria-selected="true"' : ' aria-selected="false"';
+          return `<li class="combobox-option" role="option" data-code="${o.code}" data-label="${o.name}" id="${wrapperId}-opt-${i}"${sel}>${o.name}</li>`;
+        }).join('');
+      }
+
+      function open() {
+        if (isOpen) return;
+        isOpen = true;
+        activeIndex = -1;
+        // Always show the full list when opening — only filter after user types
+        renderList(getFiltered());
+        list.hidden = false;
+        wrapper.setAttribute('aria-expanded', 'true');
+        input.setAttribute('aria-activedescendant', '');
+        // Select all text so user can start typing immediately to filter
+        input.select();
+        // Raise the parent .card's z-index so the dropdown paints above sibling
+        // form sections. Each .card has a CSS transform which creates a new
+        // stacking context, meaning z-index on children is scoped to that card.
+        // Siblings that appear later in the DOM would otherwise paint on top.
+        const card = wrapper.closest('.card');
+        if (card) card.style.zIndex = '20';
+      }
+
+      function close() {
+        if (!isOpen) return;
+        isOpen = false;
+        list.hidden = true;
+        wrapper.setAttribute('aria-expanded', 'false');
+        activeIndex = -1;
+        searchQuery = '';
+        input.removeAttribute('aria-activedescendant');
+        // Restore the display label if user typed but did not pick anything
+        const selectedVal = input.dataset.selectedValue;
+        if (!selectedVal) {
+          input.value = '';
+        } else {
+          const match = allOptions.find(o => o.code === selectedVal);
+          if (match) input.value = match.name;
+        }
+        // Restore parent card's z-index
+        const card = wrapper.closest('.card');
+        if (card) card.style.zIndex = '';
+      }
+
+      function selectByIndex(idx) {
+        const items = list.querySelectorAll('.combobox-option:not(.combobox-no-results)');
+        if (!items[idx]) return;
+        const code  = items[idx].dataset.code;
+        const label = items[idx].dataset.label;
+        input.value = label;
+        input.dataset.selectedValue = code;
+        searchQuery = '';
+        close();
+        const fieldWrapper = document.getElementById(fieldId);
+        if (fieldWrapper) fieldWrapper.classList.remove('has-error');
+        if (onSelect) onSelect(code, label);
+      }
+
+      function highlightItem(idx) {
+        const items = list.querySelectorAll('.combobox-option:not(.combobox-no-results)');
+        items.forEach(el => el.classList.remove('is-active'));
+        if (items[idx]) {
+          items[idx].classList.add('is-active');
+          items[idx].scrollIntoView({ block: 'nearest' });
+          input.setAttribute('aria-activedescendant', items[idx].id || '');
+        }
+        activeIndex = idx;
+      }
+
+      // Input events
+      // click: always open (focus already opened it; never toggle-close on click)
+      input.addEventListener('click', () => open());
+      input.addEventListener('focus', () => { if (!isOpen) open(); });
+      input.addEventListener('input', () => {
+        // User is typing — use as search filter, clear any previously committed selection
+        searchQuery = input.value;
+        input.dataset.selectedValue = '';
+        activeIndex = -1;
+        renderList(getFiltered());
+        if (!isOpen) {
+          isOpen = true;
+          list.hidden = false;
+          wrapper.setAttribute('aria-expanded', 'true');
+        }
+      });
+
+      input.addEventListener('keydown', (e) => {
+        const items = list.querySelectorAll('.combobox-option:not(.combobox-no-results)');
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (!isOpen) { open(); return; }
+          highlightItem(Math.min(activeIndex + 1, items.length - 1));
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          highlightItem(Math.max(activeIndex - 1, 0));
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (isOpen && activeIndex >= 0) { selectByIndex(activeIndex); }
+          else if (isOpen) { const first = list.querySelector('.combobox-option'); if (first) first.click(); }
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          close();
+          input.blur();
+        } else if (e.key === 'Tab') {
+          if (isOpen) {
+            // Auto-select highlighted or first match on Tab
+            if (activeIndex >= 0) selectByIndex(activeIndex);
+            else {
+              const first = list.querySelector('.combobox-option:not(.combobox-no-results)');
+              if (first) { first.click(); }
+            }
+            close();
+          }
+        }
+      });
+
+      // List click
+      list.addEventListener('mousedown', (e) => {
+        const opt = e.target.closest('.combobox-option:not(.combobox-no-results)');
+        if (!opt) return;
+        e.preventDefault();
+        const idx = Array.from(list.querySelectorAll('.combobox-option:not(.combobox-no-results)')).indexOf(opt);
+        selectByIndex(idx);
+      });
+
+      // Close when clicking outside
+      document.addEventListener('mousedown', (e) => {
+        if (isOpen && !wrapper.contains(e.target)) {
+          close(); // close() already restores display label
+        }
+      });
+
+      // Public API
+      return {
+        getValue() { return input.dataset.selectedValue || ''; },
+        getLabel() { return input.value; },
+        setValue(code, label) {
+          input.value = label;
+          input.dataset.selectedValue = code;
+          const fieldWrapper = document.getElementById(fieldId);
+          if (fieldWrapper) fieldWrapper.classList.remove('has-error');
+          if (onSelect) onSelect(code, label);
+        },
+        clear() {
+          input.value = '';
+          input.dataset.selectedValue = '';
+          searchQuery = '';
+          renderList(allOptions);
+          if (isOpen) close();
+        },
+        setOptions(newOptions) {
+          allOptions = newOptions.slice();
+          renderList(allOptions);
+        },
+      };
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // COUNTRY & STATE COMBOBOX INIT
+    // ─────────────────────────────────────────────────────────────────────────
+    let stateCombobox = null;
+
+    function getStateDataForCountry(countryCode) {
+      if (countryCode === 'US') return { options: US_STATES,   label: 'State',                    placeholder: 'Select state…',    type: 'combobox' };
+      if (countryCode === 'CA') return { options: CA_PROVINCES, label: 'Province / Territory',    placeholder: 'Select province…', type: 'combobox' };
+      if (countryCode === 'AU') return { options: AU_STATES,    label: 'State / Territory',        placeholder: 'Select state…',    type: 'combobox' };
+      // For GB and all others, use a plain text input
+      return { options: [], label: 'State / Province / Region', placeholder: 'Enter region…', type: 'text' };
+    }
+
+    function refreshStateField(countryCode) {
+      const stateData = getStateDataForCountry(countryCode);
+      const stateFieldWrapper = document.getElementById('field-state');
+      const stateLabel = document.getElementById('stateLabel');
+      if (stateLabel) stateLabel.textContent = stateData.label;
+
+      // Update ZIP label & placeholder
+      const zipLabel = document.getElementById('zipLabel');
+      const zipInput = document.getElementById('zip');
+      if (zipLabel) {
+        zipLabel.textContent = ['US'].includes(countryCode) ? 'ZIP Code' : 'Postal Code';
+      }
+      if (zipInput) {
+        const placeholders = { US: '10001', CA: 'A1A 1A1', GB: 'SW1A 1AA', AU: '2000' };
+        zipInput.placeholder = placeholders[countryCode] || 'Postal code';
+      }
+
+      if (stateData.type === 'combobox') {
+        // Rebuild or update the combobox
+        const comboboxEl = document.getElementById('stateCombobox');
+        if (comboboxEl) comboboxEl.style.display = '';
+        const plainInput = stateFieldWrapper.querySelector('input.plain-state');
+        if (plainInput) plainInput.remove();
+
+        stateCombobox = createCombobox('stateCombobox', 'field-state', stateData.options, null);
+        if (stateCombobox) {
+          stateCombobox.clear();
+          const inp = document.getElementById('stateSearch');
+          if (inp) inp.placeholder = stateData.placeholder;
+        }
+      } else {
+        // Switch to plain text input
+        const comboboxEl = document.getElementById('stateCombobox');
+        if (comboboxEl) comboboxEl.style.display = 'none';
+        stateCombobox = null;
+
+        // Ensure plain text input exists
+        let plainInput = stateFieldWrapper.querySelector('input.plain-state');
+        if (!plainInput) {
+          plainInput = document.createElement('input');
+          plainInput.type = 'text';
+          plainInput.id = 'statePlain';
+          plainInput.name = 'state';
+          plainInput.className = 'plain-state';
+          plainInput.autocomplete = 'address-level1';
+          // Insert before error span
+          const errSpan = document.getElementById('stateError');
+          stateFieldWrapper.insertBefore(plainInput, errSpan);
+
+          plainInput.addEventListener('input', () => {
+            if (plainInput.value.trim()) stateFieldWrapper.classList.remove('has-error');
+          });
+        }
+        plainInput.placeholder = stateData.placeholder;
+        plainInput.value = '';
+      }
+
+      // Reset state error
+      if (stateFieldWrapper) stateFieldWrapper.classList.remove('has-error');
+    }
+
+    const countryCombobox = createCombobox('countryCombobox', 'field-country', COUNTRIES, (code) => {
+      refreshStateField(code);
+    });
+
+    // Default to United States
+    if (countryCombobox) {
+      countryCombobox.setValue('US', 'United States');
+    }
+    refreshStateField('US');
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // GOOGLE PLACES ADDRESS AUTOCOMPLETE
+    // Loaded dynamically only when GOOGLE_PLACES_API_KEY is set.
+    // If the key is missing or the script fails to load, all fields continue
+    // working as plain text inputs — no functionality is lost.
+    // ─────────────────────────────────────────────────────────────────────────
+    window.initGooglePlaces = function () {
+      try {
+        if (typeof google === 'undefined' || !google.maps || !google.maps.places) {
+          console.warn('[ABL Pharma Checkout] Google Places unavailable — using manual address entry.');
+          return;
+        }
+
+        const addressInput = document.getElementById('address');
+        const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+          types: ['address'],
+          fields: ['address_components'],
+        });
+
+        autocomplete.addListener('place_changed', () => {
+          try {
+            const place = autocomplete.getPlace();
+            if (!place || !place.address_components) return;
+
+            let streetNumber = '', route = '', city = '', state = '', zip = '', countryCode = '', countryName = '';
+
+            place.address_components.forEach(component => {
+              const types = component.types;
+              if (types.includes('street_number'))               streetNumber = component.long_name;
+              if (types.includes('route'))                        route        = component.long_name;
+              if (types.includes('locality'))                     city         = component.long_name;
+              if (types.includes('administrative_area_level_1'))  state        = component.short_name;
+              if (types.includes('postal_code'))                  zip          = component.long_name;
+              if (types.includes('country')) { countryCode = component.short_name; countryName = component.long_name; }
+            });
+
+            if (streetNumber && route) addressInput.value = `${streetNumber} ${route}`;
+            if (city) document.getElementById('city').value = city;
+            if (zip)  document.getElementById('zip').value  = zip;
+
+            // Set country
+            const countryMatch = COUNTRIES.find(c => c.code === countryCode);
+            if (countryMatch && countryCombobox) {
+              countryCombobox.setValue(countryMatch.code, countryMatch.name);
+            }
+
+            // Set state (after country sets the state field type)
+            if (state) {
+              setTimeout(() => {
+                if (stateCombobox) {
+                  const stateData = getStateDataForCountry(countryCode);
+                  const match = stateData.options.find(s => s.code === state || s.name === state);
+                  if (match) stateCombobox.setValue(match.code, match.name);
+                } else {
+                  const plainInput = document.querySelector('.plain-state');
+                  if (plainInput) plainInput.value = state;
+                }
+              }, 50);
+            }
+
+            // Clear errors for auto-filled fields
+            ['address','city','zip'].forEach(id => {
+              const fw = document.getElementById('field-' + id);
+              if (fw) fw.classList.remove('has-error');
+            });
+          } catch (err) {
+            // Don't surface Places parsing errors to the user
+            console.warn('[ABL Pharma Checkout] Could not parse Places result:', err);
+          }
+        });
+      } catch (err) {
+        console.warn('[ABL Pharma Checkout] Google Places init failed — using manual entry.', err);
+      }
+    };
+
+    if (GOOGLE_PLACES_API_KEY) {
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_PLACES_API_KEY}&libraries=places&callback=initGooglePlaces`;
+      script.async = true;
+      script.defer = true;
+      script.onerror = () => {
+        console.warn('[ABL Pharma Checkout] Google Places API script failed to load. Checkout continues with manual entry.');
+      };
+      document.head.appendChild(script);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // CART HELPERS
+    // ─────────────────────────────────────────────────────────────────────────
+    function loadCart() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        return saved ? JSON.parse(saved) : [];
+      } catch (e) { return []; }
+    }
+
+    function clearCart() {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+
+    function fmt(value) {
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // ORDER SUMMARY RENDER
+    // ─────────────────────────────────────────────────────────────────────────
+    function renderSummary() {
+      const cart       = loadCart();
+      const itemsEl    = document.getElementById('summaryItems');
+      const subtotalEl = document.getElementById('summarySubtotal');
+      const totalEl    = document.getElementById('summaryTotal');
+      const placeBtn   = document.getElementById('placeOrderBtn');
+
+      if (!cart.length) {
+        itemsEl.innerHTML = '<p class="order-empty-note">Your cart is empty. <a href="products.html" style="color:var(--accent);">Browse products</a></p>';
+        if (subtotalEl) subtotalEl.textContent = '—';
+        if (totalEl)    totalEl.textContent    = '—';
+        if (placeBtn)   placeBtn.disabled      = true;
+        return;
+      }
+
+      const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+      itemsEl.innerHTML = cart.map(item => `
+        <div class="summary-item">
+          <img class="summary-item__img" src="${item.image}" alt="${item.name}" loading="lazy">
+          <div class="summary-item__info">
+            <div class="summary-item__name">${item.name}</div>
+            <div class="summary-item__qty">Qty: ${item.quantity}</div>
+          </div>
+          <div class="summary-item__price">${fmt(item.price * item.quantity)}</div>
+        </div>
+      `).join('');
+
+      if (subtotalEl) subtotalEl.textContent = fmt(subtotal);
+      if (totalEl)    totalEl.textContent    = fmt(subtotal);
+      if (placeBtn)   placeBtn.disabled      = false;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // VALIDATION
+    // ─────────────────────────────────────────────────────────────────────────
+    const ZIP_PATTERNS = {
+      US: /^\d{5}(-\d{4})?$/,
+      CA: /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/,
+      GB: /^[A-Za-z]{1,2}\d{1,2}[A-Za-z]?\s?\d[A-Za-z]{2}$/,
+      AU: /^\d{4}$/,
+    };
+
+    function validateZip(value, countryCode) {
+      const pattern = ZIP_PATTERNS[countryCode];
+      if (!pattern) return value.trim().length >= 3; // lenient for other countries
+      return pattern.test(value.trim());
+    }
+
+    function validatePhone(value) {
+      const digits = value.replace(/\D/g, '');
+      return digits.length >= 7 && digits.length <= 15;
+    }
+
+    function getStateValue() {
+      if (stateCombobox) return stateCombobox.getValue();
+      const plain = document.querySelector('.plain-state');
+      return plain ? plain.value.trim() : '';
+    }
+
+    function setFieldError(fieldId, message) {
+      const wrapper = document.getElementById('field-' + fieldId);
+      if (!wrapper) return;
+      wrapper.classList.add('has-error');
+      const errEl = wrapper.querySelector('.field-error');
+      if (errEl && message) errEl.textContent = message;
+    }
+
+    function clearFieldError(fieldId) {
+      const wrapper = document.getElementById('field-' + fieldId);
+      if (wrapper) wrapper.classList.remove('has-error');
+    }
+
+    function validate() {
+      let firstInvalidEl = null;
+      let valid = true;
+
+      function check(fieldId, condition, message) {
+        if (!condition) {
+          setFieldError(fieldId, message);
+          if (!firstInvalidEl) {
+            const w = document.getElementById('field-' + fieldId);
+            firstInvalidEl = w ? (w.querySelector('input, .combobox-input, textarea') || w) : null;
+          }
+          valid = false;
+        } else {
+          clearFieldError(fieldId);
+        }
+      }
+
+      const countryCode = countryCombobox ? countryCombobox.getValue() : '';
+
+      check('firstName', document.getElementById('firstName').value.trim().length > 0, 'First name is required.');
+      check('lastName',  document.getElementById('lastName').value.trim().length  > 0, 'Last name is required.');
+      check('email',     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('email').value.trim()), 'Please enter a valid email address.');
+      check('phone',     validatePhone(document.getElementById('phone').value), 'Please enter a valid phone number (at least 7 digits).');
+      check('address',   document.getElementById('address').value.trim().length > 0, 'Street address is required.');
+      check('city',      document.getElementById('city').value.trim().length    > 0, 'City is required.');
+      check('state',     getStateValue().length > 0, 'State / region is required.');
+      check('zip',       validateZip(document.getElementById('zip').value, countryCode), countryCode === 'CA' ? 'Please enter a valid postal code (e.g. A1A 1A1).' : 'Please enter a valid ZIP / postal code.');
+      check('country',   countryCode.length > 0, 'Please select a valid country.');
+
+      if (firstInvalidEl) {
+        firstInvalidEl.focus();
+        firstInvalidEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      return valid;
+    }
+
+    // Live error clearing
+    ['firstName','lastName','email','phone','address','city','zip'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('input', () => { if (el.value.trim()) clearFieldError(id); });
+    });
+    // Also clear state error on plain input
+    document.addEventListener('input', (e) => {
+      if (e.target.classList.contains('plain-state') && e.target.value.trim()) {
+        clearFieldError('state');
+      }
+    });
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // ORDER REFERENCE GENERATOR
+    // Generates a client-side reference number for display purposes only.
+    // Format: ABL-XXXXXX (6-digit numeric suffix)
+    // This reference is not connected to a payment or order-management system.
+    // ─────────────────────────────────────────────────────────────────────────
+    function generateOrderRef() {
+      const suffix = Math.floor(100000 + Math.random() * 900000);
+      return `ABL-${suffix}`;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // CONFIRMATION MODAL
+    // ─────────────────────────────────────────────────────────────────────────
+    function showConfirmation() {
+      const ref = generateOrderRef();
+      const refEl = document.getElementById('confirmRefNumber');
+      if (refEl) refEl.textContent = ref;
+
+      const overlay = document.getElementById('confirmOverlay');
+      overlay.classList.add('is-open');
+      document.getElementById('confirmCloseBtn').focus();
+    }
+
+    document.getElementById('confirmCloseBtn').addEventListener('click', () => {
+      clearCart();
+      if (typeof updateCartBadge === 'function') updateCartBadge();
+      window.location.href = 'index.html';
+    });
+
+    // Close on overlay click (outside modal)
+    document.getElementById('confirmOverlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) {
+        // Don't close — force user to click the button to clear cart
+      }
+    });
+
+    // Escape key inside modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && document.getElementById('confirmOverlay').classList.contains('is-open')) {
+        // Don't allow escape — requires explicit button click to clear cart
+      }
+    });
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // PLACE ORDER
+    // ─────────────────────────────────────────────────────────────────────────
+    document.getElementById('placeOrderBtn').addEventListener('click', () => {
+      const cart = loadCart();
+      if (!cart.length) return;
+      if (!validate()) return;
+      showConfirmation();
+    });
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // BACK TO CART
+    // ─────────────────────────────────────────────────────────────────────────
+    document.getElementById('backToCartBtn').addEventListener('click', () => {
+      history.back();
+    });
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // INIT
+    // ─────────────────────────────────────────────────────────────────────────
+    renderSummary();
+
+  })();
+  </script>
+</body>
+</html>

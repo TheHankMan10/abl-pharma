@@ -256,6 +256,7 @@ function updateQuantity(productId, change) {
   item.quantity += change;
   saveCart();
   renderCart();
+  updateCartBadge();
 }
 
 function removeItem(productId) {
@@ -268,6 +269,7 @@ function removeItem(productId) {
     cart = cart.filter((entry) => entry.id !== productId);
     saveCart();
     renderCart();
+    updateCartBadge();
   }, 220);
 }
 
@@ -429,7 +431,7 @@ function bindCartInteractions() {
   if (checkoutButton) {
     checkoutButton.addEventListener('click', () => {
       if (cart.length === 0) return;
-      window.alert('Online checkout is being prepared. Please contact ABL Pharma to place an order.');
+      window.location.href = 'checkout.html';
     });
   }
 
