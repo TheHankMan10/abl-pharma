@@ -1204,9 +1204,25 @@
     });
 
     // ─────────────────────────────────────────────────────────────────────────
-    // INIT
+    // INIT + CART SYNC
     // ─────────────────────────────────────────────────────────────────────────
     renderSummary();
+
+    // Re-render whenever the cart changes on this same page (e.g. cart drawer).
+    // script.js dispatches 'abl-cart-updated' from saveCart() after every mutation.
+    window.addEventListener('abl-cart-updated', renderSummary);
+
+    // Re-render when another tab/window changes the cart (cross-tab localStorage).
+    window.addEventListener('storage', (e) => {
+      if (e.key === STORAGE_KEY) renderSummary();
+    });
+
+    // Re-render when the user returns to this page via browser Back/Forward
+    // (bfcache restores the page without a full reload, so DOMContentLoaded
+    // does not fire again — pageshow always fires).
+    window.addEventListener('pageshow', (e) => {
+      if (e.persisted) renderSummary();
+    });
 
   })();
   </script>

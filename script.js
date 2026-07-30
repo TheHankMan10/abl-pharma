@@ -59,6 +59,9 @@ function loadCart() {
 
 function saveCart() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+  // Notify any listeners on the same page (e.g. the checkout order summary).
+  // The built-in `storage` event only fires in *other* tabs, not the current one.
+  window.dispatchEvent(new CustomEvent('abl-cart-updated'));
 }
 
 function formatPrice(value) {
