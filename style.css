@@ -3165,3 +3165,7 @@ background-position: right center;
     background-position: 95% center !important;
   }
 }
+/* Remove duplicate hero artwork image */
+.homepage .hero-art-scene {
+  display: none !important;
+}
