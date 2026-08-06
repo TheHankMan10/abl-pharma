@@ -8,8 +8,86 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
   <link rel="icon" href="Images/newest-abl-logo.png" type="image/png">
   <link rel="stylesheet" href="style.css">
+  <style>
+    .about-page .about-top-section { padding: 2.2rem 0 1.2rem; }
+    .about-page .about-two-column {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+      gap: 1.8rem;
+      align-items: center;
+    }
+    .about-page .about-image-wrap {
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(11,132,255,0.22);
+      box-shadow: 0 28px 70px rgba(0,0,0,0.5);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+    .about-page .about-image-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -18% -10% auto -10%;
+      height: 70%;
+      background: radial-gradient(circle at 50% 25%, rgba(11,132,255,0.45), rgba(11,132,255,0));
+      filter: blur(34px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .about-page .about-feature-image {
+      position: relative;
+      z-index: 1;
+      width: 88%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+      min-height: 0;
+      margin: 0 auto;
+    }
+    .about-page .about-image-wrap:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 36px 80px rgba(0,0,0,0.58), 0 0 48px rgba(11,132,255,0.2);
+    }
+    .about-page .about-copy-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 1.6rem 1.45rem;
+      animation: about-copy-fade 0.75s ease both;
+    }
+    .about-page .about-copy-card .hero-title { margin: 0.25rem 0 0.95rem; }
+    .about-page .about-copy-card p {
+      margin: 0 0 0.9rem;
+      line-height: 1.72;
+      color: var(--muted);
+    }
+    .about-page .about-copy-card p:last-child { margin-bottom: 0; }
+    .about-page .about-why-section { padding: 0.8rem 0 2.4rem; }
+    .about-page .about-why-card {
+      border-left: 3px solid rgba(11,132,255,0.45);
+      padding-left: 1rem;
+    }
+    .about-page .why-copy-block {
+      padding: 0.85rem 0;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .about-page .why-copy-block:first-of-type { border-top: none; padding-top: 0.2rem; }
+    .about-page .why-copy-block p {
+      margin: 0;
+      line-height: 1.72;
+      color: var(--muted);
+    }
+    @keyframes about-copy-fade {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 980px) {
+      .about-page .about-two-column { grid-template-columns: 1fr; }
+      .about-page .about-feature-image { min-height: 300px; }
+    }
+  </style>
 </head>
-<body>
+<body class="about-page">
   <a class="skip-link" href="#main-content">Skip to content</a>
   <nav class="nav">
     <div class="container nav-inner">
@@ -28,59 +106,39 @@
     </div>
   </nav>
 
-  <header class="hero page-hero">
-    <div class="container hero-inner">
-      <div class="hero-copy">
-        <span class="eyebrow">About ABL Pharma</span>
-        <h2 class="hero-title">Thoughtful formula development, <span class="accent">premium support</span></h2>
-        <p class="lead">ABL Pharma is building a modern supplement experience rooted in quality, clarity, and customer-focused education.</p>
-      </div>
-      <div class="hero-art">
-        <div class="page-hero-card">
-          <p class="placeholder-note">Placeholder content for your company story, founding details, and brand narrative.</p>
-        </div>
-      </div>
-    </div>
-  </header>
-
   <main id="main-content" class="page-shell">
-    <section class="container page-content reveal">
-      <div class="page-card">
-        <div class="section-header">
-          <span class="eyebrow">Company story</span>
-          <h3>Company Story</h3>
+    <section class="about-top-section">
+      <div class="container about-two-column reveal">
+        <div class="about-image-wrap">
+          <img src="Images/about-us-abl.png" alt="ABL Pharma team and training environment" class="about-feature-image" loading="lazy" decoding="async">
         </div>
-        <p>ABL Pharma is committed to delivering a premium supplement experience through research-driven product development, clear presentation, and a polished customer journey. This placeholder section is ready for your official company story, founding values, or brand narrative.</p>
+        <div class="about-copy-card">
+          <span class="eyebrow">About ABL Pharma</span>
+          <h1 class="hero-title">About <span class="accent">ABL Pharma</span></h1>
+          <p>We all know that when you look good, you feel good. We also know that sometimes our diet and exercise aren’t enough to get there. That is why ABL Pharma supplements exist.</p>
+          <p>We cater to professional bodybuilders who are experienced with performance-enhancing supplements, individuals who are new to the industry and have never tried a supplement before, and everyone in between.</p>
+          <p>With over 20 years of experience in the health and fitness industry, we have seen firsthand what sets high-quality supplements apart from products that deliver no results—or worse, may cause harm.</p>
+          <p>Our performance supplements are developed to deliver real results with thoughtfully designed formulas. ABL Pharma is a brand customers can trust and rely on to support their goals.</p>
+        </div>
       </div>
+    </section>
 
-      <div class="page-grid">
-        <div class="page-card">
+    <section class="about-why-section">
+      <div class="container page-content reveal">
+        <div class="page-card about-why-card">
           <div class="section-header">
-            <span class="eyebrow">Mission</span>
-            <h3>Mission</h3>
+            <span class="eyebrow">Why ABL Pharma</span>
+            <h3>Why ABL Pharma</h3>
           </div>
-          <p>To create high-quality supplement support products that feel sophisticated, trustworthy, and useful for athletes and wellness-minded consumers.</p>
-        </div>
-        <div class="page-card">
-          <div class="section-header">
-            <span class="eyebrow">Vision</span>
-            <h3>Vision</h3>
+          <div class="why-copy-block">
+            <p>What sets us apart from other performance supplement brands?</p>
           </div>
-          <p>To become a trusted supplement brand recognized for thoughtful formulas, premium standards, and transparent communication.</p>
-        </div>
-        <div class="page-card">
-          <div class="section-header">
-            <span class="eyebrow">Quality commitment</span>
-            <h3>Quality Commitment</h3>
+          <div class="why-copy-block">
+            <p>We are fitness professionals who have tried it all and learned what works and what does not. We have taken the time to research, compare leading supplements, and evaluate results so we can create formulas with purpose.</p>
           </div>
-          <p>ABL Pharma is focused on batching consistency, transparent product information, and premium craftsmanship across every stage of the customer experience.</p>
-        </div>
-        <div class="page-card">
-          <div class="section-header">
-            <span class="eyebrow">Manufacturing</span>
-            <h3>Manufacturing</h3>
+          <div class="why-copy-block">
+            <p>At ABL Pharma, we focus not only on ingredient quality, but also on appropriate dosages. Our products are made with clinically dosed ingredients so customers can receive the intended benefits of each formula.</p>
           </div>
-          <p>Placeholder content — add manufacturing details, facility information, or testing protocols here when official information is ready.</p>
         </div>
       </div>
     </section>

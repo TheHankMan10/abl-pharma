@@ -9,7 +9,7 @@
   <link rel="icon" href="Images/newest-abl-logo.png" type="image/png">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="faq-page">
   <a class="skip-link" href="#main-content">Skip to content</a>
   <nav class="nav">
     <div class="container nav-inner">
@@ -30,15 +30,13 @@
 
   <header class="hero page-hero">
     <div class="container hero-inner">
+      <div class="hero-art">
+        <img src="Images/faq-premium-tech-hero-4x3.png" alt="ABL Pharma FAQ artwork with blue question mark and high-tech interface elements" class="faq-hero-image">
+      </div>
       <div class="hero-copy">
         <span class="eyebrow">Frequently asked questions</span>
         <h2 class="hero-title">Helpful answers for <span class="accent">orders and product support</span></h2>
-        <p class="lead">Placeholder responses are included here so you can replace them with official information whenever it becomes available.</p>
-      </div>
-      <div class="hero-art">
-        <div class="page-hero-card">
-          <p class="placeholder-note">Use this page to answer the most common customer questions with polished, editable content.</p>
-        </div>
+        <p class="lead">Find quick answers about products, orders, shipping, returns, and customer support.</p>
       </div>
     </div>
   </header>
@@ -47,33 +45,65 @@
     <section class="container page-content reveal">
       <div class="page-card">
         <details class="faq-item" open>
-          <summary class="faq-question">Shipping</summary>
+          <summary class="faq-question">1. WHAT IS ABL PHARMA?</summary>
           <div class="faq-answer">
-            <p>Shipping details placeholder. Add fulfillment timing, delivery zones, and packaging information here.</p>
+            <p>ABL Pharma provides performance-support supplements for bodybuilders, fitness enthusiasts, and individuals who are new to supplementation. Our formulas focus on ingredient quality, appropriate dosages, and support for a variety of fitness goals.</p>
           </div>
         </details>
         <details class="faq-item">
-          <summary class="faq-question">Returns</summary>
+          <summary class="faq-question">2. HOW DO I CHOOSE THE RIGHT PRODUCT?</summary>
           <div class="faq-answer">
-            <p>Returns policy placeholder. Add return windows, condition requirements, and refund details here.</p>
+            <p>Review each product page to learn about the product’s intended purpose, ingredients, serving instructions, and warnings. Choose the formula that best matches your goals. For additional product information, contact us at <a href="mailto:sales@ablpharma.com">sales@ablpharma.com</a>.</p>
           </div>
         </details>
         <details class="faq-item">
-          <summary class="faq-question">Product Questions</summary>
+          <summary class="faq-question">3. HOW SHOULD I TAKE ABL PHARMA PRODUCTS?</summary>
           <div class="faq-answer">
-            <p>Product support placeholder. Add guidance about ingredients, usage, and product availability here.</p>
+            <p>Always follow the serving instructions and warnings printed on the product label. Do not exceed the recommended serving. Read the complete label before using any product.</p>
           </div>
         </details>
         <details class="faq-item">
-          <summary class="faq-question">Ordering</summary>
+          <summary class="faq-question">4. CAN I USE MULTIPLE ABL PHARMA PRODUCTS TOGETHER?</summary>
           <div class="faq-answer">
-            <p>Ordering placeholder. Share information about payment methods, order confirmation, and account support here.</p>
+            <p>Some customers may choose to use more than one supplement. However, compatibility depends on the ingredients, dosages, medications, health conditions, and individual circumstances. Review each product label and consult a qualified healthcare professional before combining supplements.</p>
           </div>
         </details>
         <details class="faq-item">
-          <summary class="faq-question">Contact</summary>
+          <summary class="faq-question">5. HOW LONG DOES IT TAKE TO NOTICE RESULTS?</summary>
           <div class="faq-answer">
-            <p>Contact placeholder. Add the best ways for customers to reach your team and expected response times here.</p>
+            <p>Results vary depending on the product, consistency of use, diet, exercise, lifestyle, and the individual. ABL Pharma does not guarantee a specific result or timeline.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-question">6. ARE ABL PHARMA PRODUCTS SAFE?</summary>
+          <div class="faq-answer">
+            <p>ABL Pharma products should only be used according to their labels. Supplements may affect individuals differently and may interact with medications or medical conditions. Consult a healthcare professional before use, especially if you are pregnant, nursing, taking medication, or managing a health condition.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-question">7. WHERE CAN I FIND THE INGREDIENTS AND SERVING INFORMATION?</summary>
+          <div class="faq-answer">
+            <p>Ingredient details, serving instructions, capsule counts, warnings, and other product information are listed on each product page and on the physical product label.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-question">8. HOW QUICKLY ARE ORDERS PROCESSED?</summary>
+          <div class="faq-answer">
+            <p>Orders are generally processed within 4 business days, excluding weekends and holidays. Orders placed after 3:00 PM will begin processing on the following business day. A shipping notification will be sent when the order ships.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-question">9. WHAT IS THE RETURN POLICY?</summary>
+          <div class="faq-answer">
+            <p>Unopened and unused products may be eligible for return when the request is submitted within 10 days of delivery. Proof of purchase is required. Opened products, partially used products, clearance or sale items, gift cards, promotional items, and products purchased from third-party retailers are non-refundable.</p>
+            <p>For complete details, review the <a href="privacy-policy.html">Policies page</a>.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-question">10. HOW DO I CONTACT ABL PHARMA?</summary>
+          <div class="faq-answer">
+            <p>For questions about products, orders, payments, shipping, returns, or other concerns, contact ABL Pharma at:</p>
+            <p><a href="mailto:sales@ablpharma.com">sales@ablpharma.com</a></p>
           </div>
         </details>
       </div>
@@ -104,5 +134,26 @@
   <button id="scrollTop" class="scroll-top" type="button" aria-label="Scroll to top">↑</button>
 
   <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const faqItems = Array.from(document.querySelectorAll('.faq-item'));
+      if (!faqItems.length) return;
+
+      faqItems.forEach((item, index) => {
+        if (index === 0) {
+          item.open = true;
+        } else {
+          item.open = false;
+        }
+
+        item.addEventListener('toggle', () => {
+          if (!item.open) return;
+          faqItems.forEach((other) => {
+            if (other !== item) other.open = false;
+          });
+        });
+      });
+    });
+  </script>
 </body>
 </html>

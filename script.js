@@ -41,6 +41,8 @@ const PRODUCT_CATALOG = [
 ];
 
 const STORAGE_KEY = 'abl-pharma-cart';
+const HOME_PROMO_STORAGE_KEY = 'abl-pharma-home-promo';
+const HOME_PROMO_CODE = 'ABL10';
 
 let cart = loadCart();
 let cartOpen = false;
@@ -71,6 +73,150 @@ function formatPrice(value) {
 function isValidEmail(email) {
   // Basic, resilient email validation suitable for client-side checks
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function loadHomePromoState() {
+  try {
+    const savedState = localStorage.getItem(HOME_PROMO_STORAGE_KEY);
+    return savedState ? JSON.parse(savedState) : null;
+  } catch (error) {
+    console.warn('Promo popup state could not be loaded from localStorage', error);
+    return null;
+  }
+}
+
+function saveHomePromoState(state) {
+  localStorage.setItem(HOME_PROMO_STORAGE_KEY, JSON.stringify(state));
+}
+
+function hideHomePromoPopup(overlay) {
+  if (!overlay) return;
+  overlay.classList.remove('is-visible');
+  overlay.setAttribute('aria-hidden', 'true');
+
+  window.setTimeout(() => {
+    if (overlay.parentNode) {
+      overlay.parentNode.removeChild(overlay);
+    }
+  }, 260);
+}
+
+function initializeHomePromoPopup() {
+  if (!document.body.classList.contains('homepage')) return;
+  if (document.getElementById('promoSignupOverlay')) return;
+
+  const promoState = loadHomePromoState();
+  if (promoState && (promoState.popupDismissed || promoState.discountClaimed)) return;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'promoSignupOverlay';
+  overlay.className = 'promo-signup-overlay';
+  overlay.setAttribute('aria-hidden', 'true');
+
+  overlay.innerHTML = `
+    <div class="promo-signup-modal" role="dialog" aria-modal="true" aria-labelledby="promoSignupTitle">
+      <button type="button" class="promo-signup-close" aria-label="Close offer popup">×</button>
+      <h2 id="promoSignupTitle">Unlock 10% Off Your First Order</h2>
+      <p class="promo-signup-copy">Join ABL Pharma to receive exclusive offers and your first-order discount.</p>
+      <form id="promoSignupForm" class="promo-signup-form" novalidate>
+        <label for="promoSignupEmail" class="sr-only">Email address</label>
+        <input id="promoSignupEmail" type="email" name="email" placeholder="Enter your email address" autocomplete="email" required>
+        <p id="promoSignupError" class="promo-signup-error" aria-live="polite"></p>
+        <button type="submit" class="btn btn-primary">Claim My Discount</button>
+      </form>
+      <div id="promoSignupSuccess" class="promo-signup-success" hidden>
+        <p>Thank you!</p>
+        <p>Your exclusive promo code is:</p>
+        <strong>${HOME_PROMO_CODE}</strong>
+        <button type="button" class="btn btn-outline" id="promoCopyCodeBtn">Copy Code</button>
+      </div>
+      <button type="button" class="promo-signup-no-thanks">No Thanks</button>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  const closeBtn = overlay.querySelector('.promo-signup-close');
+  const noThanksBtn = overlay.querySelector('.promo-signup-no-thanks');
+  const form = overlay.querySelector('#promoSignupForm');
+  const emailInput = overlay.querySelector('#promoSignupEmail');
+  const errorEl = overlay.querySelector('#promoSignupError');
+  const successEl = overlay.querySelector('#promoSignupSuccess');
+  const copyCodeBtn = overlay.querySelector('#promoCopyCodeBtn');
+
+  function dismissPopup() {
+    saveHomePromoState({
+      status: 'dismissed',
+      email: promoState && promoState.email ? promoState.email : '',
+      promoCode: promoState && promoState.promoCode ? promoState.promoCode : HOME_PROMO_CODE,
+      popupDismissed: true,
+      discountClaimed: false,
+      dismissedAt: new Date().toISOString()
+    });
+    hideHomePromoPopup(overlay);
+  }
+
+  closeBtn.addEventListener('click', dismissPopup);
+  noThanksBtn.addEventListener('click', dismissPopup);
+
+  overlay.addEventListener('click', (event) => {
+    if (event.target === overlay) dismissPopup();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && document.body.contains(overlay)) {
+      dismissPopup();
+    }
+  });
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const email = emailInput.value.trim();
+
+    if (!isValidEmail(email)) {
+      errorEl.textContent = 'Please enter a valid email address.';
+      emailInput.focus();
+      return;
+    }
+
+    errorEl.textContent = '';
+    saveHomePromoState({
+      status: 'redeemed',
+      email,
+      promoCode: HOME_PROMO_CODE,
+      popupDismissed: true,
+      discountClaimed: true,
+      redeemedAt: new Date().toISOString()
+    });
+
+    form.hidden = true;
+    noThanksBtn.hidden = true;
+    successEl.hidden = false;
+  });
+
+  if (copyCodeBtn) {
+    copyCodeBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(HOME_PROMO_CODE);
+        copyCodeBtn.textContent = 'Copied!';
+        window.setTimeout(() => {
+          copyCodeBtn.textContent = 'Copy Code';
+        }, 1200);
+      } catch (error) {
+        copyCodeBtn.textContent = 'Copy Failed';
+        window.setTimeout(() => {
+          copyCodeBtn.textContent = 'Copy Code';
+        }, 1200);
+      }
+    });
+  }
+
+  window.setTimeout(() => {
+    if (!document.body.contains(overlay)) return;
+    overlay.classList.add('is-visible');
+    overlay.setAttribute('aria-hidden', 'false');
+    emailInput.focus();
+  }, 1000);
 }
 
 function getCartCount() {
@@ -656,6 +802,7 @@ document.addEventListener('DOMContentLoaded', function(){
   // sync visible product card prices and disable purchasing for unpriced items
   syncProductCardPrices();
   initializeNavigation();
+  initializeHomePromoPopup();
 
   if(contactForm){
     contactForm.addEventListener('submit', (e) => {

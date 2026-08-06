@@ -148,6 +148,19 @@
     .order-summary__header { padding: 1.2rem 1.4rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
     .order-summary__header .eyebrow { margin-bottom: 0.2rem; }
     .order-summary__header h2 { font-size: 1rem; margin: 0; }
+    .promo-code-box { padding: 0.95rem 1.4rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .promo-code-box label { display: block; color: var(--muted); font-size: 0.8rem; margin-bottom: 0.45rem; }
+    .promo-code-controls { display: flex; gap: 0.5rem; }
+    .promo-code-controls input {
+      flex: 1; min-width: 0; padding: 0.62rem 0.75rem; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.03);
+      color: var(--text); font-family: inherit; font-size: 0.86rem;
+    }
+    .promo-code-controls input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(11,132,255,0.12); }
+    .promo-code-controls .btn { white-space: nowrap; padding-inline: 0.85rem; }
+    .promo-feedback { margin: 0.45rem 0 0; min-height: 1.1rem; font-size: 0.78rem; color: var(--muted); }
+    .promo-feedback.success { color: #5ec7ff; }
+    .promo-feedback.error { color: #f07f7f; }
 
     .order-summary__items { padding: 0.8rem 1.4rem; display: flex; flex-direction: column; gap: 1rem; }
     .order-empty-note { color: var(--muted); font-size: 0.88rem; text-align: center; padding: 1rem 0; }
@@ -171,6 +184,7 @@
       border-top: 1px solid rgba(255,255,255,0.07);
       padding-top: 0.6rem; margin-top: 0.3rem; font-weight: 700; font-size: 0.96rem;
     }
+    .totals-row.discount { color: #5ec7ff; }
     .totals-row .label { color: var(--muted); }
     .totals-row.total .label { color: var(--text); }
     .shipping-note { font-size: 0.74rem; color: rgba(255,255,255,0.35); margin-top: 0.15rem; text-align: right; }
@@ -377,6 +391,14 @@
           <span class="eyebrow">Your order</span>
           <h2>Order Summary</h2>
         </div>
+        <div class="promo-code-box">
+          <label for="promoCodeInput">Promo Code</label>
+          <div class="promo-code-controls">
+            <input type="text" id="promoCodeInput" name="promoCode" placeholder="Enter promo code" autocomplete="off" aria-label="Promo code">
+            <button type="button" class="btn btn-outline" id="applyPromoBtn">Apply</button>
+          </div>
+          <p id="promoFeedback" class="promo-feedback" aria-live="polite"></p>
+        </div>
         <div class="order-summary__items" id="summaryItems">
           <p class="order-empty-note">Your cart is empty. <a href="products.html" style="color:var(--accent);">Browse products</a></p>
         </div>
@@ -384,6 +406,10 @@
           <div class="totals-row">
             <span class="label">Subtotal</span>
             <span id="summarySubtotal">—</span>
+          </div>
+          <div class="totals-row discount">
+            <span class="label">Discount</span>
+            <span id="summaryDiscount">—</span>
           </div>
           <div class="totals-row" style="flex-direction:column;align-items:flex-start;gap:0.2rem;">
             <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
@@ -468,6 +494,11 @@
     const GOOGLE_PLACES_API_KEY = ''; // ← Add your Google Places API key here
 
     const STORAGE_KEY = 'abl-pharma-cart';
+    const HOME_PROMO_STORAGE_KEY = 'abl-pharma-home-promo';
+    const PROMO_APPLIED_STORAGE_KEY = 'abl-pharma-applied-promo';
+    const PROMO_REDEEMED_STORAGE_KEY = 'abl-pharma-redeemed-promos';
+    const FIRST_ORDER_PROMO_CODE = 'ABL10';
+    const FIRST_ORDER_PROMO_RATE = 0.10;
 
     // ─────────────────────────────────────────────────────────────────────────
     // DATA: Countries
@@ -1012,6 +1043,42 @@
       localStorage.removeItem(STORAGE_KEY);
     }
 
+    function loadJSON(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (e) {
+        return fallback;
+      }
+    }
+
+    function saveJSON(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function getAppliedPromoCode() {
+      const applied = loadJSON(PROMO_APPLIED_STORAGE_KEY, null);
+      return applied && typeof applied.code === 'string' ? applied.code : '';
+    }
+
+    function saveAppliedPromoCode(code) {
+      saveJSON(PROMO_APPLIED_STORAGE_KEY, { code, appliedAt: new Date().toISOString() });
+    }
+
+    function clearAppliedPromoCode() {
+      localStorage.removeItem(PROMO_APPLIED_STORAGE_KEY);
+    }
+
+    function getRedeemedPromos() {
+      return loadJSON(PROMO_REDEEMED_STORAGE_KEY, {});
+    }
+
+    function markPromoRedeemed(code) {
+      const redeemed = getRedeemedPromos();
+      redeemed[code] = new Date().toISOString();
+      saveJSON(PROMO_REDEEMED_STORAGE_KEY, redeemed);
+    }
+
     function fmt(value) {
       return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
     }
@@ -1019,22 +1086,54 @@
     // ─────────────────────────────────────────────────────────────────────────
     // ORDER SUMMARY RENDER
     // ─────────────────────────────────────────────────────────────────────────
+    function getSummaryTotals(cart, appliedCode) {
+      const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      const hasDiscount = appliedCode === FIRST_ORDER_PROMO_CODE && subtotal > 0;
+      const rawDiscount = hasDiscount ? subtotal * FIRST_ORDER_PROMO_RATE : 0;
+      const discount = Math.round(rawDiscount * 100) / 100;
+      const total = Math.max(0, subtotal - discount);
+      return { subtotal, discount, total, hasDiscount };
+    }
+
+    function setPromoFeedback(message, type) {
+      const feedback = document.getElementById('promoFeedback');
+      if (!feedback) return;
+      feedback.textContent = message || '';
+      feedback.classList.remove('success', 'error');
+      if (type) feedback.classList.add(type);
+    }
+
     function renderSummary() {
       const cart       = loadCart();
       const itemsEl    = document.getElementById('summaryItems');
       const subtotalEl = document.getElementById('summarySubtotal');
+      const discountEl = document.getElementById('summaryDiscount');
       const totalEl    = document.getElementById('summaryTotal');
       const placeBtn   = document.getElementById('placeOrderBtn');
+      const promoInput = document.getElementById('promoCodeInput');
+      const appliedCode = getAppliedPromoCode();
+      const redeemed = getRedeemedPromos();
 
       if (!cart.length) {
         itemsEl.innerHTML = '<p class="order-empty-note">Your cart is empty. <a href="products.html" style="color:var(--accent);">Browse products</a></p>';
+        clearAppliedPromoCode();
         if (subtotalEl) subtotalEl.textContent = '—';
+        if (discountEl) discountEl.textContent = '—';
         if (totalEl)    totalEl.textContent    = '—';
         if (placeBtn)   placeBtn.disabled      = true;
+        if (promoInput) promoInput.value = '';
+        setPromoFeedback('', null);
         return;
       }
 
-      const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      if (appliedCode && redeemed[appliedCode]) {
+        clearAppliedPromoCode();
+        if (promoInput) promoInput.value = '';
+        setPromoFeedback('Promo code already redeemed.', 'error');
+      }
+
+      const currentAppliedCode = getAppliedPromoCode();
+      const totals = getSummaryTotals(cart, currentAppliedCode);
 
       itemsEl.innerHTML = cart.map(item => `
         <div class="summary-item">
@@ -1047,9 +1146,45 @@
         </div>
       `).join('');
 
-      if (subtotalEl) subtotalEl.textContent = fmt(subtotal);
-      if (totalEl)    totalEl.textContent    = fmt(subtotal);
+      if (subtotalEl) subtotalEl.textContent = fmt(totals.subtotal);
+      if (discountEl) discountEl.textContent = totals.hasDiscount ? `- ${fmt(totals.discount)}` : fmt(0);
+      if (totalEl)    totalEl.textContent    = fmt(totals.total);
       if (placeBtn)   placeBtn.disabled      = false;
+
+      if (promoInput) {
+        promoInput.value = currentAppliedCode || '';
+      }
+    }
+
+    function applyPromoCode() {
+      const input = document.getElementById('promoCodeInput');
+      if (!input) return;
+
+      const enteredCode = input.value.trim().toUpperCase();
+      if (!enteredCode || enteredCode !== FIRST_ORDER_PROMO_CODE) {
+        clearAppliedPromoCode();
+        renderSummary();
+        setPromoFeedback('Invalid promo code.', 'error');
+        return;
+      }
+
+      const redeemed = getRedeemedPromos();
+      if (redeemed[enteredCode]) {
+        clearAppliedPromoCode();
+        renderSummary();
+        setPromoFeedback('Promo code already redeemed.', 'error');
+        return;
+      }
+
+      const cart = loadCart();
+      if (!cart.length) {
+        setPromoFeedback('Invalid promo code.', 'error');
+        return;
+      }
+
+      saveAppliedPromoCode(enteredCode);
+      renderSummary();
+      setPromoFeedback('✔ 10% discount applied.', 'success');
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -1167,6 +1302,18 @@
     }
 
     document.getElementById('confirmCloseBtn').addEventListener('click', () => {
+      const appliedCode = getAppliedPromoCode();
+      if (appliedCode === FIRST_ORDER_PROMO_CODE) {
+        markPromoRedeemed(appliedCode);
+        const promoState = loadJSON(HOME_PROMO_STORAGE_KEY, {});
+        saveJSON(HOME_PROMO_STORAGE_KEY, {
+          ...promoState,
+          promoCode: FIRST_ORDER_PROMO_CODE,
+          popupDismissed: true,
+          discountClaimed: true
+        });
+      }
+      clearAppliedPromoCode();
       clearCart();
       if (typeof updateCartBadge === 'function') updateCartBadge();
       window.location.href = 'index.html';
@@ -1203,6 +1350,14 @@
       history.back();
     });
 
+    document.getElementById('applyPromoBtn').addEventListener('click', applyPromoCode);
+    document.getElementById('promoCodeInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        applyPromoCode();
+      }
+    });
+
     // ─────────────────────────────────────────────────────────────────────────
     // INIT + CART SYNC
     // ─────────────────────────────────────────────────────────────────────────
@@ -1214,7 +1369,11 @@
 
     // Re-render when another tab/window changes the cart (cross-tab localStorage).
     window.addEventListener('storage', (e) => {
-      if (e.key === STORAGE_KEY) renderSummary();
+      if (
+        e.key === STORAGE_KEY ||
+        e.key === PROMO_APPLIED_STORAGE_KEY ||
+        e.key === PROMO_REDEEMED_STORAGE_KEY
+      ) renderSummary();
     });
 
     // Re-render when the user returns to this page via browser Back/Forward
